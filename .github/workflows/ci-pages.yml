@@ -1,7 +1,7 @@
 name: Validate, QA, and deploy Pages
 on:
   push:
-    branches: [main, codex/spritelab-v2]
+    branches: [main, work, codex/spritelab-v2]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -16,32 +16,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Retrieve pinned Atlas source frames
-        run: bash tools/setup_atlas_assets.sh
       - uses: actions/setup-python@v5
-        with: { python-version: "3.12", cache: pip }
-      - run: pip install -r requirements.txt
-      - name: Generate analysis and binary preview assets
-        run: python tools/analyze_sven.py
-      - run: python tools/analyze_sven.py --check
+        with: { python-version: "3.12" }
       - run: python tools/check_frontend.py
       - uses: actions/setup-node@v4
         with: { node-version: 20, cache: npm }
       - run: npm ci
-      - run: node --check app.js
+      - run: npm run check
       - name: Browser QA with system Chrome
         run: npm test
       - uses: actions/upload-artifact@v4
         if: always()
-        with: { name: playwright-screenshots, path: test-results/screenshots, if-no-files-found: warn }
-      - name: Assemble complete static Pages site
+        with:
+          name: rig-editor-playwright-artifacts
+          path: |
+            test-results/screenshots
+            test-results/**/*.zip
+          if-no-files-found: warn
+      - name: Assemble dependency-free Pages site
         if: github.event_name != 'pull_request'
         run: |
-          mkdir -p _site/inputs/sven/walk _site/outputs
-          cp index.html app.js styles.css _site/
-          cp -R inputs/sven/walk/atlas-original _site/inputs/sven/walk/
-          cp -R outputs/analysis outputs/previews _site/outputs/
-          sed -i "s/>local</>${GITHUB_SHA::7}</" _site/index.html
+          mkdir -p _site
+          cp index.html styles.css README.md _site/
+          cp -R src vendor docs _site/
       - uses: actions/configure-pages@v5
         if: github.event_name != 'pull_request'
       - uses: actions/upload-pages-artifact@v3

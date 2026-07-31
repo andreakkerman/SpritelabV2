@@ -2,64 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#171b1d">
-  <title>SpriteLab — Sven Walk</title>
-  <link rel="stylesheet" href="styles.css?v=20260731">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,viewport-fit=cover">
+  <meta name="theme-color" content="#171b1c">
+  <title>SpriteLab Rig — Sven Walk</title>
+  <link rel="stylesheet" href="styles.css?v=rig-1">
 </head>
 <body>
-  <header class="topbar">
-    <div><span class="wordmark">SPRITE<span>LAB</span></span><span class="project">Sven / Walk / Atlas Original</span></div>
-    <button id="inspectBtn" class="quiet">Enlarge</button>
-  </header>
+  <header><div><b>SPRITE<span>LAB</span></b><small>SVEN CUT-OUT RIG · WALK RIGHT</small></div><div id="saveState" class="saved">Saved on this device</div></header>
   <main>
-    <section class="stage-panel" aria-label="Animation preview">
-      <div class="stage-head">
-        <div><span class="live-dot"></span><strong id="variantLabel">Original · 24 frames</strong><small id="directionLabel">SOURCE · RIGHT</small></div>
-        <div class="facts"><span>15 FPS</span><span>1.6 SEC</span><span>RGBA</span></div>
-      </div>
-      <div id="stage" class="stage checker">
-        <canvas id="preview" width="360" height="440" aria-label="Sven walk animation"></canvas>
-        <div class="stage-badge" id="frameBadge">FRAME 01 / 24</div>
+    <section class="stage-shell">
+      <div class="stage-meta"><div><strong id="frameTitle">00 · Left contact</strong><small id="assetStatus">0 / 4 assets loaded</small></div><div><span>360 × 440</span><span>ALPHA</span></div></div>
+      <div id="viewport" class="viewport checker" aria-label="Rig preview">
+        <canvas id="stage" width="360" height="440"></canvas>
+        <div id="zoomReadout">100%</div>
       </div>
       <div class="transport">
-        <button id="prevBtn" aria-label="Previous frame">◀</button><button id="playBtn" class="primary" aria-label="Pause">❚❚</button><button id="nextBtn" aria-label="Next frame">▶</button>
-        <input id="scrubber" aria-label="Frame scrubber" type="range" min="1" max="24" value="1">
-        <label class="fps"><input id="fps" type="number" min="1" max="60" value="15"> FPS</label><label><input id="loop" type="checkbox" checked> Loop</label><button id="resetFps" class="quiet">Reset 15</button>
+        <button id="previous" aria-label="Previous frame">◀</button><button id="play" class="accent" aria-label="Play">▶</button><button id="next" aria-label="Next frame">▶</button>
+        <label><input id="fps" type="number" min="1" max="30" value="10"> FPS</label><label><input id="loop" type="checkbox" checked> Loop</label><button id="fit">Fit</button><button id="exportOpen" class="accent">Export</button>
       </div>
-      <div class="stage-tools">
-        <div class="segmented" aria-label="Direction"><button data-direction="right" class="active">Right · source</button><button data-direction="left">Left · mirrored</button></div>
-        <div class="segmented" aria-label="Background"><button data-bg="checker" class="active">Grid</button><button data-bg="light">Light</button><button data-bg="dark">Dark</button><button data-bg="scene">Scene</button></div>
-        <label>Zoom <input id="zoom" type="range" min="35" max="150" value="82"></label><button id="gameSize" class="quiet">Atlas size</button>
-      </div>
+      <div id="frames" class="frames" role="tablist" aria-label="Walk cycle frames"></div>
     </section>
 
-    <section class="timeline-panel">
-      <div class="section-head"><div><span class="eyebrow">SOURCE TIMELINE</span><strong id="selectedLabel">Frame 01 · frame-01.png</strong></div><div><button id="restoreOrder" class="quiet">Original order</button><button id="restoreTiming" class="quiet">Original timing</button></div></div>
-      <div id="timeline" class="timeline" role="listbox" aria-label="24 source frames"></div>
-      <div class="frame-actions"><button id="moveLeft">Move left</button><button id="toggleFrame">Disable frame</button><button id="moveRight">Move right</button><label>Duration <input id="duration" type="number" min="16" max="2000" value="67"> ms</label></div>
-    </section>
-
-    <nav class="tool-tabs" aria-label="Workbench tools">
-      <button data-tab="align" class="active">Align</button><button data-tab="transition">Transition</button><button data-tab="variants">Variants</button><button data-tab="diagnostics">Diagnostics</button><button data-tab="detail">Frame detail</button><button data-tab="export">Export</button>
-    </nav>
-
-    <section id="align" class="tool-panel active">
-      <div class="panel-title"><div><span class="eyebrow">ALIGNMENT STUDIO</span><h2>Correct motion, not artwork</h2></div><p>Offsets are non-destructive and update playback instantly.</p></div>
-      <div class="tool-grid">
-        <div class="control-block"><h3>Selected frame</h3><label>X offset <input id="offsetX" type="range" min="-50" max="50" value="0"><output id="offsetXOut">0 px</output></label><label>Y offset <input id="offsetY" type="range" min="-50" max="50" value="0"><output id="offsetYOut">0 px</output></label><div><button id="resetSelected">Reset frame</button><button id="resetOffsets" class="quiet">Reset all</button></div></div>
-        <div class="control-block"><h3>Ground & onion</h3><label>Shared baseline <input id="baseline" type="range" min="400" max="435" value="422"><output id="baselineOut">422 px</output></label><button id="autoAlign">Auto-align baseline</button><label>Onion opacity <input id="onionOpacity" type="range" min="0" max="80" value="25"><output id="onionOut">25%</output></label><div class="checks"><label><input id="onionPrev" type="checkbox"> Previous</label><label><input id="onionNext" type="checkbox"> Next</label></div></div>
-        <div class="control-block"><h3>Inspection overlays</h3><div id="overlayChecks" class="checks wrap"><label><input data-overlay="bounds" type="checkbox"> Alpha bounds</label><label><input data-overlay="center" type="checkbox"> Visual center</label><label><input data-overlay="ground" type="checkbox" checked> Ground line</label><label><input data-overlay="canvas" type="checkbox"> Canvas bounds</label><label><input data-overlay="filename" type="checkbox"> Filename</label><label><input data-overlay="offset" type="checkbox"> X/Y offset</label></div></div>
+    <nav class="tabs"><button data-tab="pose" class="active">Pose</button><button data-tab="assets">Assets</button><button data-tab="project">Project</button></nav>
+    <section id="pose" class="panel active">
+      <div class="mode-row"><div><small>RIG MODE</small><div class="segmented"><button data-mode="whole" class="active">Whole legs</button><button data-mode="segmented">Segmented</button></div></div><button id="onionToggle">Onion: off</button></div>
+      <div id="layerButtons" class="layer-buttons"></div>
+      <div class="edit-grid">
+        <label class="wide">Rotation <input id="rotation" type="range" min="-45" max="45" step="1"><input id="rotationNumber" type="number" min="-180" max="180"></label>
+        <label>X offset <input id="x" type="range" min="-60" max="60"><input id="xNumber" type="number" min="-180" max="180"></label>
+        <label>Y offset <input id="y" type="range" min="-60" max="60"><input id="yNumber" type="number" min="-180" max="180"></label>
+        <label>Onion opacity <input id="onionOpacity" type="range" min="5" max="70" value="24"><output id="onionValue">24%</output></label>
       </div>
+      <div class="action-grid"><button id="visibility">Hide layer</button><button id="lock">Lock layer</button><button id="zUp">Move forward</button><button id="zDown">Move backward</button><button id="resetLayer">Reset layer</button><button id="resetFrame">Reset frame</button><button id="copyFrame">Copy frame</button><button id="mirrorPose">Mirror opposite legs</button></div>
+      <p class="hint">Drag the selected part to position it. Drag the gold pivot handle to change its rotation point. Pinch to zoom; drag empty stage space to pan.</p>
     </section>
 
-    <section id="transition" class="tool-panel"><div class="panel-title"><div><span class="eyebrow">TRANSITION FOCUS</span><h2 id="transitionTitle">Frame 01 → 02</h2></div><button id="repeatTransition">Repeat pair</button></div><div class="transition-layout"><div class="transition-canvases"><canvas id="beforeCanvas" width="360" height="440"></canvas><canvas id="diffCanvas" width="360" height="440"></canvas><canvas id="afterCanvas" width="360" height="440"></canvas></div><div id="transitionMetrics" class="metric-grid"></div></div></section>
-    <section id="variants" class="tool-panel"><div class="panel-title"><div><span class="eyebrow">VARIANT LAB</span><h2>Preserve motion. Test economy.</h2></div><div class="segmented"><button data-compare="fps" class="active">Equal FPS</button><button data-compare="duration">Equal 1.6 sec</button></div></div><div id="variantGrid" class="variant-grid"></div><button id="restartVariants">Restart all variants</button></section>
-    <section id="diagnostics" class="tool-panel"><div class="panel-title"><div><span class="eyebrow">DIAGNOSTICS</span><h2>Concrete signals, no opaque score</h2></div><span>Python analysis · immutable source</span></div><div id="findings" class="findings"></div></section>
-    <section id="detail" class="tool-panel"><div class="panel-title"><div><span class="eyebrow">FRAME DETAIL</span><h2 id="detailTitle">frame-01.png</h2></div></div><div class="detail-layout"><canvas id="detailCanvas" width="360" height="440"></canvas><div id="frameMetrics" class="metric-grid"></div><img src="outputs/analysis/sven-walk-contact-sheet.webp?v=20260731" alt="Full 24-frame contact sheet" class="contact-sheet"></div></section>
-    <section id="export" class="tool-panel"><div class="panel-title"><div><span class="eyebrow">DELIVERY</span><h2>Export the corrected right-facing source</h2></div></div><div class="export-grid"><button data-export="project"><strong>Project JSON</strong><span>Editable state + schema</span></button><button data-export="metadata"><strong>Atlas metadata</strong><span>Runtime-ready animation config</span></button><button data-export="frame"><strong>Selected PNG</strong><span>Normalized transparent frame</span></button><button data-export="allFrames"><strong>All PNG frames</strong><span>Downloads enabled normalized frames</span></button><button data-export="sheet"><strong>PNG spritesheet</strong><span>Right-facing enabled sequence</span></button><button data-export="preview"><strong>Animated preview</strong><span>Compact source GIF</span></button><button data-export="snippet"><strong>Integration snippet</strong><span>Atlas-compatible JavaScript</span></button></div><div class="import-row"><label>Import project JSON <input id="importProject" type="file" accept="application/json"></label><button id="resetProject" class="danger">Reset project</button></div><pre id="snippet" hidden></pre></section>
+    <section id="assets" class="panel">
+      <div class="panel-heading"><div><small>LOCAL PNG LAYERS</small><h2>Load Sven’s authoritative parts</h2></div><p>Images stay on this device. Nothing is uploaded.</p></div>
+      <div id="assetList" class="asset-list"></div>
+      <p class="notice">Do not use a parts sheet as final artwork. Load clean transparent PNG cut-outs derived from the authoritative complete Sven sprite.</p>
+    </section>
+
+    <section id="project" class="panel">
+      <div class="panel-heading"><div><small>PROJECT & RECOVERY</small><h2>Device-local, deterministic</h2></div><p id="validationSummary"></p></div>
+      <div class="project-actions"><button id="downloadRig">Download project JSON</button><label class="file-button">Import project JSON<input id="importRig" type="file" accept="application/json"></label><button id="advancedUnlock">Advanced unlock…</button><button id="clearProject" class="danger">Clear project</button></div>
+      <div class="integration"><h3>Atlas integration</h3><pre id="atlasSnippet"></pre><button id="copySnippet">Copy snippet</button></div>
+    </section>
   </main>
-  <footer><span>Build <b id="buildCommit">local</b> · 2026-07-31</span><span>Atlas <b>7be9f99</b> · 24 frames · 15 FPS · 1.6 sec</span></footer>
-  <script src="app.js?v=20260731"></script>
+
+  <dialog id="exportDialog"><form method="dialog"><div class="dialog-head"><div><small>DELIVERY</small><h2>Export walk cycle</h2></div><button value="cancel" aria-label="Close">×</button></div><p>Exports are right-facing, transparent, 360 × 440 PNGs. The ZIP includes frames, rig JSON, imported layer PNGs, manifest, QA report, and instructions.</p><div id="exportValidation" class="notice"></div><div class="export-actions"><button type="button" id="exportCurrent">Current frame PNG</button><button type="button" id="exportAll">All eight PNGs</button><button type="button" id="exportRig">Rig JSON</button><button type="button" id="exportManifest">Manifest JSON</button><button type="button" id="exportZip" class="accent">Export complete ZIP</button></div><div id="exportProgress" aria-live="polite"></div></form></dialog>
+  <dialog id="unlockDialog"><form method="dialog"><h2>Unlock stable artwork?</h2><p>Upper body and pelvis cover are locked so every output frame remains pixel-identical. Unlock only to correct asset placement; animation transforms remain prohibited.</p><div class="dialog-actions"><button value="cancel">Keep locked</button><button id="confirmUnlock" value="unlock" class="danger">I understand — unlock selected</button></div></form></dialog>
+  <div id="toast" role="status"></div>
+  <script src="vendor/jszip.min.js"></script>
+  <script type="module" src="src/app.js?v=rig-1"></script>
 </body>
 </html>
