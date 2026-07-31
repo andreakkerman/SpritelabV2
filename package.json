@@ -1,0 +1,13 @@
+{
+  "name": "spritelab-v2",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "setup:assets": "bash tools/setup_atlas_assets.sh",
+    "analyze": "python3 tools/analyze_sven.py",
+    "serve": "python3 -m http.server 4173",
+    "check": "node --check app.js && python3 tools/analyze_sven.py --check",
+    "test": "playwright test"
+  },
+  "devDependencies": { "@playwright/test": "1.55.0" }
+}
