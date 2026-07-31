@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,viewport-fit=cover">
+  <meta name="theme-color" content="#171b1c">
+  <title>SpriteLab Rig — Sven Walk</title>
+  <link rel="stylesheet" href="styles.css?v=rig-1">
+</head>
+<body>
+  <header><div><b>SPRITE<span>LAB</span></b><small>SVEN CUT-OUT RIG · WALK RIGHT</small></div><div id="saveState" class="saved">Saved on this device</div></header>
+  <main>
+    <section class="stage-shell">
+      <div class="stage-meta"><div><strong id="frameTitle">00 · Left contact</strong><small id="assetStatus">0 / 4 assets loaded</small></div><div><span>360 × 440</span><span>ALPHA</span></div></div>
+      <div id="viewport" class="viewport checker" aria-label="Rig preview">
+        <canvas id="stage" width="360" height="440"></canvas>
+        <div id="zoomReadout">100%</div>
+      </div>
+      <div class="transport">
+        <button id="previous" aria-label="Previous frame">◀</button><button id="play" class="accent" aria-label="Play">▶</button><button id="next" aria-label="Next frame">▶</button>
+        <label><input id="fps" type="number" min="1" max="30" value="10"> FPS</label><label><input id="loop" type="checkbox" checked> Loop</label><button id="fit">Fit</button><button id="exportOpen" class="accent">Export</button>
+      </div>
+      <div id="frames" class="frames" role="tablist" aria-label="Walk cycle frames"></div>
+    </section>
+
+    <nav class="tabs"><button data-tab="pose" class="active">Pose</button><button data-tab="assets">Assets</button><button data-tab="project">Project</button></nav>
+    <section id="pose" class="panel active">
+      <div class="mode-row"><div><small>RIG MODE</small><div class="segmented"><button data-mode="whole" class="active">Whole legs</button><button data-mode="segmented">Segmented</button></div></div><button id="onionToggle">Onion: off</button></div>
+      <div id="layerButtons" class="layer-buttons"></div>
+      <div class="edit-grid">
+        <label class="wide">Rotation <input id="rotation" type="range" min="-45" max="45" step="1"><input id="rotationNumber" type="number" min="-180" max="180"></label>
+        <label>X offset <input id="x" type="range" min="-60" max="60"><input id="xNumber" type="number" min="-180" max="180"></label>
+        <label>Y offset <input id="y" type="range" min="-60" max="60"><input id="yNumber" type="number" min="-180" max="180"></label>
+        <label>Onion opacity <input id="onionOpacity" type="range" min="5" max="70" value="24"><output id="onionValue">24%</output></label>
+      </div>
+      <div class="action-grid"><button id="visibility">Hide layer</button><button id="lock">Lock layer</button><button id="zUp">Move forward</button><button id="zDown">Move backward</button><button id="resetLayer">Reset layer</button><button id="resetFrame">Reset frame</button><button id="copyFrame">Copy frame</button><button id="mirrorPose">Mirror opposite legs</button></div>
+      <p class="hint">Drag the selected part to position it. Drag the gold pivot handle to change its rotation point. Pinch to zoom; drag empty stage space to pan.</p>
+    </section>
+
+    <section id="assets" class="panel">
+      <div class="panel-heading"><div><small>LOCAL PNG LAYERS</small><h2>Load Sven’s authoritative parts</h2></div><p>Images stay on this device. Nothing is uploaded.</p></div>
+      <div id="assetList" class="asset-list"></div>
+      <p class="notice">Do not use a parts sheet as final artwork. Load clean transparent PNG cut-outs derived from the authoritative complete Sven sprite.</p>
+    </section>
+
+    <section id="project" class="panel">
+      <div class="panel-heading"><div><small>PROJECT & RECOVERY</small><h2>Device-local, deterministic</h2></div><p id="validationSummary"></p></div>
+      <div class="project-actions"><button id="downloadRig">Download project JSON</button><label class="file-button">Import project JSON<input id="importRig" type="file" accept="application/json"></label><button id="advancedUnlock">Advanced unlock…</button><button id="clearProject" class="danger">Clear project</button></div>
+      <div class="integration"><h3>Atlas integration</h3><pre id="atlasSnippet"></pre><button id="copySnippet">Copy snippet</button></div>
+    </section>
+  </main>
+
+  <dialog id="exportDialog"><form method="dialog"><div class="dialog-head"><div><small>DELIVERY</small><h2>Export walk cycle</h2></div><button value="cancel" aria-label="Close">×</button></div><p>Exports are right-facing, transparent, 360 × 440 PNGs. The ZIP includes frames, rig JSON, imported layer PNGs, manifest, QA report, and instructions.</p><div id="exportValidation" class="notice"></div><div class="export-actions"><button type="button" id="exportCurrent">Current frame PNG</button><button type="button" id="exportAll">All eight PNGs</button><button type="button" id="exportRig">Rig JSON</button><button type="button" id="exportManifest">Manifest JSON</button><button type="button" id="exportZip" class="accent">Export complete ZIP</button></div><div id="exportProgress" aria-live="polite"></div></form></dialog>
+  <dialog id="unlockDialog"><form method="dialog"><h2>Unlock stable artwork?</h2><p>Upper body and pelvis cover are locked so every output frame remains pixel-identical. Unlock only to correct asset placement; animation transforms remain prohibited.</p><div class="dialog-actions"><button value="cancel">Keep locked</button><button id="confirmUnlock" value="unlock" class="danger">I understand — unlock selected</button></div></form></dialog>
+  <div id="toast" role="status"></div>
+  <script src="vendor/jszip.min.js"></script>
+  <script type="module" src="src/app.js?v=rig-1"></script>
+</body>
+</html>

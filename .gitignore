@@ -1,0 +1,12 @@
+node_modules/
+test-results/
+playwright-report/
+__pycache__/
+
+# User-supplied and generated binary assets never belong in pull requests.
+assets/rig/*.png
+exports/**/*.png
+exports/**/*.zip
+
+# Browser QA screenshots are retained as workflow artifacts, not Git objects.
+docs/screenshots/*.png
