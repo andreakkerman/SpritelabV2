@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "serve": "python3 -m http.server 4173",
-    "check": "node --check src/app.js && node --check src/model.js && node --check src/renderer.js && node --check src/storage.js && python3 tools/check_frontend.py",
-    "test": "playwright test"
+    "check": "node --check src/app.js && node --check src/model.js && node --check src/renderer.js && node --check src/storage.js && node --check studio/app.js && node --check studio/model.js && node --check studio/storage.js && python3 tools/check_frontend.py",
+    "test": "playwright test",
+    "test:unit": "node --test tests/unit/*.test.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",

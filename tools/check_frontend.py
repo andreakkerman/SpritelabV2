@@ -5,8 +5,8 @@ import re
 
 root = Path(__file__).resolve().parents[1]
 required = [
-    "index.html", "styles.css", "src/app.js", "src/model.js", "src/renderer.js",
-    "src/storage.js", "vendor/jszip.min.js", "docs/architecture.md",
+    "index.html", "favicon.svg", "styles.css", "src/app.js", "src/model.js", "src/renderer.js",
+    "src/storage.js", "studio/index.html", "studio/app.js", "studio/model.js", "studio/storage.js", "studio/studio.css", "vendor/jszip.min.js", "docs/architecture.md",
     "docs/asset-preparation.md", "docs/mobile-workflow.md", "docs/atlas-integration.md"
 ]
 for relative in required:
