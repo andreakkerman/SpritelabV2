@@ -5,20 +5,26 @@ import re
 
 root = Path(__file__).resolve().parents[1]
 required = [
-    "index.html", "styles.css", "src/app.js", "src/model.js", "src/renderer.js",
-    "src/storage.js", "vendor/jszip.min.js", "docs/architecture.md",
+    "index.html", "favicon.svg", "styles.css", "src/app.js", "src/model.js", "src/renderer.js",
+    "src/storage.js", "studio/index.html", "studio/app.js", "studio/model.js", "studio/storage.js", "studio/studio.css", "vendor/jszip.min.js", "docs/architecture.md",
     "docs/asset-preparation.md", "docs/mobile-workflow.md", "docs/atlas-integration.md"
 ]
 for relative in required:
     if not (root / relative).is_file():
         raise SystemExit(f"Missing required static editor file: {relative}")
 
-html = (root / "index.html").read_text()
-for asset in re.findall(r'(?:src|href)="([^"?#]+)', html):
-    if asset.startswith(("http:", "https:")):
-        continue
-    if not (root / asset).exists():
-        raise SystemExit(f"Missing referenced asset: {asset}")
+for html_path in (root / "index.html", root / "studio/index.html"):
+    html = html_path.read_text()
+    for asset in re.findall(r'(?:src|href)="([^"?#]+)', html):
+        if asset.startswith(("http:", "https:")):
+            continue
+        target = (html_path.parent / asset).resolve()
+        try:
+            target.relative_to(root)
+        except ValueError:
+            raise SystemExit(f"Referenced asset escapes repository: {html_path}: {asset}")
+        if not target.exists():
+            raise SystemExit(f"Missing referenced asset: {html_path}: {asset}")
 
 model = (root / "src/model.js").read_text()
 renderer = (root / "src/renderer.js").read_text()

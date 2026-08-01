@@ -34,11 +34,25 @@ jobs:
             test-results/**/*.zip
           if-no-files-found: warn
       - name: Assemble dependency-free Pages site
-        if: github.event_name != 'pull_request'
         run: |
+          rm -rf _site
           mkdir -p _site
-          cp index.html styles.css README.md sven-walk-right-download.html _site/
-          cp -R src vendor docs _site/
+          cp index.html styles.css favicon.svg README.md sven-walk-right-download.html _site/
+          cp -R src vendor studio docs _site/
+      - name: Verify Pages artifact contents
+        run: |
+          required_files=(
+            _site/index.html
+            _site/studio/index.html
+            _site/studio/app.js
+            _site/studio/model.js
+            _site/studio/storage.js
+            _site/vendor/jszip.min.js
+          )
+          for file in "${required_files[@]}"; do
+            test -f "$file" || { echo "Missing Pages runtime file: $file" >&2; exit 1; }
+          done
+          find _site -type f -print | sort
       - uses: actions/configure-pages@v5
         if: github.event_name != 'pull_request'
       - uses: actions/upload-pages-artifact@v3
