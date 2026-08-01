@@ -10,3 +10,5 @@ exports/**/*.zip
 
 # Browser QA screenshots are retained as workflow artifacts, not Git objects.
 docs/screenshots/*.png
+
+_site/
