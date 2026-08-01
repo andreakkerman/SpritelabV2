@@ -1,8 +1,12 @@
-# SpriteLab V2 — Sven cut-out walk rig
+# SpriteLab V2 — Sprite Studio and Animator
 
-SpriteLab V2 is a static, mobile-first Canvas editor for building one deterministic eight-frame Sven walk cycle from fixed transparent parts. The previous full-frame workflow exposed unavoidable visual drift between independently generated sprites. This version keeps Sven’s authoritative artwork fixed and varies only explicit leg transforms. **Image generation is not used to render final frames.**
+SpriteLab V2 contains **Sprite Studio** at [`/studio/`](studio/) for turning one master PNG into cutouts and independent animation frames, plus the existing static, mobile-first **Animator** at the root for building one deterministic eight-frame Sven walk cycle from fixed transparent parts. The previous full-frame workflow exposed unavoidable visual drift between independently generated sprites. This version keeps Sven’s authoritative artwork fixed and varies only explicit leg transforms. **Image generation is not used to render final frames.**
 
-## Use on iPhone or iPad
+## Sprite Studio
+
+Open <https://andreakkerman.github.io/SpritelabV2/studio/>. Import a local master PNG, extract the four rig roles, set normalized pivots, duplicate and correct frames, preview onion skins, and export a transparent Studio v2 ZIP. See [the Studio user guide](docs/SPRITE_STUDIO_USER_GUIDE.md) and [implementation notes](docs/SPRITE_STUDIO_IMPLEMENTATION.md).
+
+## Use Animator on iPhone or iPad
 
 1. Open the GitHub Pages site at <https://andreakkerman.github.io/SpritelabV2/> in Safari.
 2. Open **Assets** and load clean transparent PNGs from Files or Photos. Whole-leg mode expects `upper_body.png`, `pelvis_cover.png`, `left_leg.png`, and `right_leg.png`. Segmented mode expects the upper body and pelvis plus `left_thigh.png`, `left_shin.png`, `left_foot.png`, `right_thigh.png`, `right_shin.png`, and `right_foot.png`.
@@ -39,7 +43,7 @@ No Sven PNG is required to deploy the generic editor. Binary layers are supplied
 
 ## Limitations
 
-- Asset cut-outs must be prepared outside SpriteLab; there is no automatic extraction or image-generation fallback.
+- Studio provides manual rectangle/polygon extraction and alpha-mask cleanup; it does not automatically infer body parts or generate artwork.
 - No inverse kinematics, meshes, deformation, body bob, or arm animation.
 - IndexedDB durability is controlled by Safari and device storage pressure; export a ZIP regularly.
 - Imported JSON deliberately contains no image data. Restore assets from the ZIP’s `assets/` directory.
