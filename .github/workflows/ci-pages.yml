@@ -37,7 +37,7 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           mkdir -p _site
-          cp index.html styles.css README.md _site/
+          cp index.html styles.css README.md sven-walk-right-download.html _site/
           cp -R src vendor docs _site/
       - uses: actions/configure-pages@v5
         if: github.event_name != 'pull_request'
