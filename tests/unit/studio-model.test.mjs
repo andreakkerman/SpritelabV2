@@ -1,0 +1,13 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {createViewport,documentToScreen,screenToDocument,zoomAtPoint,normalizedPivot,rectFromPoints,polygonContains,alphaBounds,paddedBounds,roleAvailable,createProject,duplicateFrame,serializeProject,createManifest} from '../../studio/model.js';
+test('screen/document transforms round trip',()=>{const v={scale:2,offsetX:10,offsetY:-4},p={x:7,y:9};assert.deepEqual(screenToDocument(v,documentToScreen(v,p)),p)});
+test('zoom remains anchored around point',()=>{const v={scale:1,offsetX:0,offsetY:0},s={x:50,y:60},before=screenToDocument(v,s);zoomAtPoint(v,s,2);assert.deepEqual(screenToDocument(v,s),before)});
+test('normalized pivot clamps',()=>assert.deepEqual(normalizedPivot(60,-2,100,100),{space:'asset-normalized',x:.6,y:0}));
+test('rectangle extraction coordinates normalize',()=>assert.deepEqual(rectFromPoints({x:9,y:8},{x:2,y:3}),{x:2,y:3,width:7,height:5}));
+test('polygon rasterization',()=>{const p=[{x:0,y:0},{x:10,y:0},{x:10,y:10},{x:0,y:10}];assert.equal(polygonContains(p,5,5),true);assert.equal(polygonContains(p,15,5),false)});
+test('alpha bounds finds visible pixels',()=>{const d=new Uint8ClampedArray(4*4*4);d[(2*4+1)*4+3]=255;d[(3*4+2)*4+3]=1;assert.deepEqual(alphaBounds(d,4,4),{x:1,y:2,width:2,height:2})});
+test('crop padding clamps to canvas',()=>assert.deepEqual(paddedBounds({x:1,y:1,width:3,height:3},6,6,4),{x:0,y:0,width:6,height:6}));
+test('roles are unique',()=>assert.equal(roleAvailable([{id:'a',role:'left_leg'}],'left_leg'),false));
+test('frame duplication is isolated',()=>{const p=createProject();p.frames[0].assetOverrides.a={x:1};const copy=duplicateFrame(p.frames[0],1);copy.assetOverrides.a.x=9;assert.equal(p.frames[0].assetOverrides.a.x,1);assert.notEqual(copy.id,p.frames[0].id)});
+test('patch lists duplicate independently',()=>{const p=createProject();p.frames[0].patches.push({id:'p',x:4,y:5});const copy=duplicateFrame(p.frames[0],1);copy.patches[0].x=8;assert.equal(p.frames[0].patches[0].x,4);assert.deepEqual(copy.patches[0],{id:'p',x:8,y:5})});
+test('serialization removes runtime images and manifest describes archive',()=>{const p=createProject('QA');p.rigAssets.push({id:'a',image:{},role:'left_leg'});const clean=serializeProject(p);assert.equal('image' in clean.rigAssets[0],false);assert.equal(createManifest(p).entrypoints.rig,'data/rig.json')});
+test('new projects start with an eight-frame timeline',()=>assert.equal(createProject().frames.length,8));
