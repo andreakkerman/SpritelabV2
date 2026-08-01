@@ -19,12 +19,17 @@
   <div class="toolbar" aria-label="Project actions">
     <label id="importLabel" class="file primary" for="masterInput">Open master image</label>
     <button id="fit">Fit</button><button id="undo">Undo</button><button id="redo">Redo</button>
-    <details class="more-menu"><summary>More</summary><div class="more-menu-panel">
+    <button id="moreToggle" aria-expanded="false" aria-controls="morePanel">More</button>
+    <aside class="sheet more-menu-panel" id="morePanel" aria-label="More project actions" aria-hidden="true">
+      <div class="sheet-head"><strong>More</strong><button data-sheet-close aria-label="Close more actions">Close</button></div>
+      <div class="sheet-body">
       <button id="toggleMaster">Master: on</button><button id="rawMaster">Mask: applied</button>
       <button id="removeBackground">Remove edge background</button>
       <label>Overlay <input id="masterOpacity" type="range" min="0" max="100" value="100"></label>
-      <button id="save">Save project</button><button id="export">Export ZIP</button><a href="../">Animator ↗</a>
-    </div></details>
+      <button id="save">Save project</button><button id="export">Export ZIP</button>
+      <button id="newProject" class="danger">New project</button><a href="../">Animator ↗</a>
+      </div>
+    </aside>
   </div>
 
   <main>
@@ -33,25 +38,25 @@
       <button data-tool="move">✥<span>Move</span></button><button data-tool="pivot">⊙<span>Pivot</span></button>
       <button data-tool="erase">◯<span>Erase</span></button><button data-tool="restore">●<span>Restore</span></button>
       <button data-tool="pan">✋<span>Pan</span></button>
+      <button id="inspectorToggle" aria-expanded="false" aria-controls="inspectorPanel">▦<span>Assets</span></button>
     </aside>
     <section class="workspace">
-      <div class="canvasbar"><span id="dimensions">No master</span><span id="zoom">100%</span><span id="modeLabel">ASSET MODE</span></div>
+      <div class="canvasbar"><span id="dimensions">No master</span><span id="toolStatus">Rectangle selection</span><span id="zoom">100%</span><span id="modeLabel">Asset mode</span></div>
       <div id="viewport">
         <canvas id="canvas"></canvas>
         <div id="empty">
           <b>Open a master image</b><span>Choose the character image you want to edit.</span>
           <label class="file primary" for="masterInput">Open master image</label>
         </div>
-        <div id="onboardingHint" hidden>Use Select to mark a body part, then choose its role and extract it.</div>
+        <button id="onboardingHint" hidden aria-label="Dismiss hint">Select a body part, choose its role, then extract it. <span>×</span></button>
       </div>
       <div id="selectionActions" hidden>
         <select id="role" aria-label="Cutout role"><option>upper_body</option><option>pelvis_cover</option><option>left_leg</option><option>right_leg</option></select>
         <button id="extract" class="primary">Extract cutout</button><button id="closePolygon" hidden>Close polygon</button><button id="cancelSelection">Cancel</button>
       </div>
     </section>
-    <button id="inspectorToggle" aria-expanded="false" aria-controls="inspectorPanel">Assets</button>
-    <div id="inspectorBackdrop" hidden></div>
-    <aside class="inspector" id="inspectorPanel" aria-label="Assets and properties">
+    <div id="sheetBackdrop" hidden></div>
+    <aside class="sheet inspector" id="inspectorPanel" aria-label="Assets and properties" aria-hidden="true">
       <div class="sheet-head"><strong>Assets &amp; properties</strong><button id="inspectorClose" aria-label="Close inspector">Close</button></div>
       <section><h2>Rig assets</h2><div id="assets"></div></section>
       <section id="properties"><h2>Properties</h2><p class="muted">Select an extracted asset.</p></section>
@@ -63,6 +68,7 @@
     <div class="transport"><button id="previous">◀</button><button id="play" class="primary">▶</button><button id="next">▶</button><button id="newFrame">+ Empty</button><button id="duplicate">Duplicate</button><button id="deleteFrame">Delete</button><label>FPS <input id="fps" type="number" min="1" max="30" value="10"></label><label><input id="onionPrev" type="checkbox"> Prev</label><label><input id="onionNext" type="checkbox"> Next</label><label>Onion <input id="onionOpacity" type="range" min="5" max="70" value="25"></label><button id="copyRegion">Copy region</button><button id="pastePatch">Paste in place</button></div>
     <div id="timeline"></div>
   </footer>
+  <button id="framesSummary">Frames: 8 · Open Frame mode</button>
   <div id="toast" role="status"></div>
   <script src="../vendor/jszip.min.js"></script><script type="module" src="app.js"></script>
 </body>
