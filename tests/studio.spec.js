@@ -91,3 +91,18 @@ test('mobile progressive disclosure does not overlap controls',async({page})=>{
   const assets=await page.locator('#inspectorToggle').boundingBox(),timeline=await page.locator('#timeline').boundingBox();expect(assets.y+assets.height<=timeline.y||assets.y>=timeline.y+timeline.height).toBe(true);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);expect(errors).toEqual([]);
 });
+
+test('iPhone Frame mode keeps navigation, tools, and timeline reachable',async({page})=>{
+  const errors=[];page.on('console',message=>{if(message.type()==='error')errors.push(message.text())});
+  await page.setViewportSize({width:390,height:844});await page.goto('/studio/');
+  for(let cycle=0;cycle<5;cycle++){
+    await page.locator('#frameMode').click();
+    for(const selector of ['header','.toolbar','#assetMode','#frameMode','#moreToggle','#importLabel','footer','#previous','#play','#next','#newFrame','#duplicate','#deleteFrame','#timelineSettings'])await expect(page.locator(selector)).toBeVisible();
+    const visibleTools=await page.locator('.tools button:visible').evaluateAll(buttons=>buttons.map(button=>button.id||button.dataset.tool));
+    expect(visibleTools).toEqual(['move','pivot','pan','framesAction','inspectorToggle']);
+    const geometry=await page.evaluate(()=>{const box=selector=>{const r=document.querySelector(selector).getBoundingClientRect();return{x:r.x,y:r.y,right:r.right,bottom:r.bottom,width:r.width,height:r.height}};const timeline=document.querySelector('#timeline');return{header:box('header'),importLabel:box('#importLabel'),footer:box('footer'),timeline:box('#timeline'),documentWidth:document.documentElement.scrollWidth,viewportWidth:document.documentElement.clientWidth,timelineScrollWidth:timeline.scrollWidth,timelineClientWidth:timeline.clientWidth}});
+    expect(geometry.header.y).toBeGreaterThanOrEqual(0);expect(geometry.header.right).toBeLessThanOrEqual(390);expect(geometry.importLabel.right).toBeLessThanOrEqual(390);expect(geometry.footer.bottom).toBeLessThanOrEqual(844);expect(geometry.timeline.right).toBeLessThanOrEqual(390);expect(geometry.timelineScrollWidth).toBeGreaterThan(geometry.timelineClientWidth);expect(geometry.documentWidth).toBeLessThanOrEqual(geometry.viewportWidth);
+    await page.locator('#assetMode').click();await expect(page.locator('footer')).toBeHidden();await expect(page.locator('#framesSummary')).toBeVisible();
+  }
+  expect(errors).toEqual([]);
+});
