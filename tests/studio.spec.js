@@ -141,7 +141,8 @@ test('Head, joint repair, layers, and Demo walk remain contextual and persistent
   await page.locator('#frameMode').click();await page.locator('#inspectorToggle').click();await page.locator('.asset[data-id]').filter({hasText:'Left upper leg'}).click();
   await expect(page.locator('#setJoint')).toBeVisible();await expect(page.locator('#fixJoint')).toBeDisabled();
   await page.locator('#setJoint').click();const canvas=page.locator('#canvas'),box=await canvas.boundingBox();
-  await canvas.dispatchEvent('pointerdown',{pointerId:7,pointerType:'touch',clientX:box.x+box.width/2,clientY:box.y+box.height/2,buttons:1});await canvas.dispatchEvent('pointerup',{pointerId:7,pointerType:'touch',clientX:box.x+box.width/2,clientY:box.y+box.height/2});
+  await canvas.click({position:{x:box.width/2,y:box.height/2}});
+  expect(await page.evaluate(()=>{const p=window.SpriteStudioTest.project(),selectedId=window.SpriteStudioTest.selectedAssetId();return{joint:p.joints?.left,hasUpper:p.rigAssets.some(a=>a.role==='left_upper_leg'),hasLower:p.rigAssets.some(a=>a.role==='left_lower_leg'),selectedRole:p.rigAssets.find(a=>a.id===selectedId)?.role}})).toMatchObject({joint:{assetId:expect.any(String),x:expect.any(Number),y:expect.any(Number)},hasUpper:true,hasLower:true,selectedRole:'left_upper_leg'});
   await page.locator('#inspectorToggle').click();await page.locator('.asset[data-id]').filter({hasText:'Left upper leg'}).click();await expect(page.locator('#fixJoint')).toBeEnabled();await page.locator('#fixJoint').click();
   await expect(page.locator('[data-cover="left"]')).toContainText('Joint cover');await expect(page.locator('#coverSize')).toHaveValue('medium');await page.locator('#coverColor').fill('#ff0000');await page.locator('#coverSize').selectOption('large');
   await page.locator('[data-id]').filter({hasText:'Head'}).click();await page.locator('#bringForward').click();await page.locator('#sendBackward').click();
