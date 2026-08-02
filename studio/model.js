@@ -1,4 +1,19 @@
-export const ROLES=["upper_body","pelvis_cover","left_leg","right_leg"];
+export const ROLES=["upper_body","pelvis_cover","left_leg","right_leg","left_upper_leg","left_lower_leg","right_upper_leg","right_lower_leg"];
+export const ROLE_LABELS={upper_body:"Upper body",pelvis_cover:"Pelvis cover",left_leg:"Left leg",right_leg:"Right leg",left_upper_leg:"Left upper leg",left_lower_leg:"Left lower leg",right_upper_leg:"Right upper leg",right_lower_leg:"Right lower leg"};
+export const roleLabel=role=>ROLE_LABELS[role]||role.replaceAll("_"," ").replace(/^./,c=>c.toUpperCase());
+export function defaultParentId(assets,role){const parentRole={left_lower_leg:"left_upper_leg",right_lower_leg:"right_upper_leg"}[role];return assets.find(a=>a.role===parentRole)?.id??null}
+const multiply=(a,b)=>({a:a.a*b.a+a.c*b.b,b:a.b*b.a+a.d*b.b,c:a.a*b.c+a.c*b.d,d:a.b*b.c+a.d*b.d,e:a.a*b.e+a.c*b.f+a.e,f:a.b*b.e+a.d*b.f+a.f});
+const translate=(x,y)=>({a:1,b:0,c:0,d:1,e:x,f:y});
+const rotate=degrees=>{const r=degrees*Math.PI/180,c=Math.cos(r),s=Math.sin(r);return{a:c,b:s,c:-s,d:c,e:0,f:0}};
+export const transformPoint=(m,p)=>({x:m.a*p.x+m.c*p.y+m.e,y:m.b*p.x+m.d*p.y+m.f});
+/** Resolve an asset's per-frame transform. Positions remain document-space bind positions for compatibility. */
+export function assetWorldTransform(assets,frame,id,rotationOffset=()=>0,stack=new Set()){
+  const asset=assets.find(a=>a.id===id);if(!asset||stack.has(id))return {a:1,b:0,c:0,d:1,e:0,f:0};
+  const override=frame?.assetOverrides?.[id]||{},x=override.x??asset.position.x,y=override.y??asset.position.y,px=asset.pivot.x*asset.width,py=asset.pivot.y*asset.height;
+  const local=multiply(translate(x+px,y+py),multiply(rotate((override.rotation||0)+rotationOffset(asset)),translate(-asset.position.x-px,-asset.position.y-py)));
+  if(!asset.parentId)return local;
+  const next=new Set(stack);next.add(id);return multiply(assetWorldTransform(assets,frame,asset.parentId,rotationOffset,next),local);
+}
 export const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 export function createViewport(){return {scale:1,offsetX:0,offsetY:0}}
 export function documentToScreen(view,p){return{x:p.x*view.scale+view.offsetX,y:p.y*view.scale+view.offsetY}}
