@@ -11,73 +11,66 @@
 <body data-mode="asset">
   <header>
     <a class="brand" href="../"><b>SPRITE<span>LAB</span></b><small>STUDIO</small></a>
-    <nav aria-label="Editor mode"><button id="assetMode" class="active">Asset</button><button id="frameMode">Frame</button></nav>
-    <button id="moreToggle" class="project-trigger" aria-expanded="false" aria-controls="morePanel">Project</button>
+    <nav aria-label="Workspace"><button id="assetMode" class="active"><span>Artwork</span></button><button id="frameMode"><span>Animate</span></button><button id="moreToggle" class="project-trigger" aria-expanded="false" aria-controls="morePanel"><span>Project</span></button></nav>
     <div id="saveState">Local-first</div>
   </header>
 
   <input id="masterInput" class="visually-hidden" type="file" accept="image/png">
   <div class="toolbar" aria-label="Project actions">
-    <label id="importLabel" class="file primary" for="masterInput">Open master image</label>
+    <label id="importLabel" class="file primary" for="masterInput">Open image</label>
     <button id="fit">Fit</button><button id="undo">Undo</button><button id="redo">Redo</button>
     <aside class="sheet more-menu-panel" id="morePanel" aria-label="More project actions" aria-hidden="true">
       <div class="sheet-head"><strong>Project</strong><button data-sheet-close aria-label="Close project actions">Close</button></div>
       <div class="sheet-body">
-      <label class="file" for="masterInput">Replace master</label>
       <button id="newProject" class="danger">New project</button>
       <div id="newProjectConfirm" class="confirm" hidden><p>Clear the local Studio project and return to the import screen?</p><div class="row"><button id="cancelNewProject">Cancel</button><button id="confirmNewProject" class="danger">Clear project</button></div></div>
       <button id="save">Save project</button><button id="export">Export ZIP</button><a href="../">Animator ↗</a>
-      <hr>
-      <button id="toggleMaster">Master: on</button><button id="rawMaster">Mask: applied</button>
-      <button id="removeBackground">Remove edge background</button>
-      <label>Overlay <input id="masterOpacity" type="range" min="0" max="100" value="100"></label>
       </div>
     </aside>
   </div>
 
   <main>
     <aside class="tools" aria-label="Canvas tools">
-      <button data-tool="select" class="active">▱<span>Select</span></button><button data-tool="polygon">⬠<span>Polygon</span></button>
-      <button data-tool="move">✥<span>Move</span></button><button data-tool="pivot">⊙<span>Pivot</span></button>
-      <button data-tool="erase">◯<span>Erase</span></button><button data-tool="restore">●<span>Restore</span></button>
-      <button data-tool="pan">✋<span>Pan</span></button>
-      <button id="framesAction">▤<span>Frames</span></button>
-      <button id="inspectorToggle" aria-expanded="false" aria-controls="inspectorPanel">▦<span>Assets</span></button>
+      <button data-tool="select" class="active">▱<span>Select</span></button><button data-tool="polygon">⬠<span>Outline</span></button>
+      <button data-tool="move">✥<span>Move</span></button><button data-tool="rotate">↻<span>Rotate</span></button>
+      <button data-tool="erase">◯<span>Erase</span></button>
+      <button id="inspectorToggle" aria-expanded="false" aria-controls="inspectorPanel">▦<span>Parts</span></button>
     </aside>
     <section class="workspace">
-      <div class="canvasbar"><span id="dimensions">No master</span><span id="toolStatus">Rectangle selection</span><span id="zoom">100%</span><span id="modeLabel">Asset mode</span></div>
+      <div class="canvasbar"><strong id="workspaceGoal">Prepare artwork</strong><span id="dimensions">No image</span><span id="toolStatus">Drag to select</span><span id="zoom">100%</span></div>
       <div id="viewport">
         <canvas id="canvas"></canvas>
         <div id="empty">
-          <b>Open a master image</b><span>Choose the character image you want to edit.</span>
-          <label class="file primary" for="masterInput">Open master image</label>
+          <b>Start with your artwork</b><span>Open the character image you want to turn into animation parts.</span>
+          <label class="file primary" for="masterInput">Open image</label>
         </div>
         <button id="onboardingHint" hidden aria-label="Dismiss hint">Select a body part, choose its role, then extract it. <span>×</span></button>
       </div>
       <div id="selectionActions" hidden>
         <select id="role" aria-label="Cutout role"><option>upper_body</option><option>pelvis_cover</option><option>left_leg</option><option>right_leg</option></select>
-        <button id="extract" class="primary">Extract cutout</button><button id="closePolygon" hidden>Close polygon</button><button id="cancelSelection">Cancel</button>
+        <button id="extract" class="primary">Create part</button><button id="closePolygon" hidden>Finish outline</button><button id="cancelSelection">Cancel</button>
       </div>
     </section>
     <div id="sheetBackdrop" hidden></div>
     <aside class="sheet inspector" id="inspectorPanel" aria-label="Assets and properties" aria-hidden="true">
-      <div class="sheet-head"><strong>Assets &amp; properties</strong><button id="inspectorClose" aria-label="Close inspector">Close</button></div>
-      <section><h2>Rig assets</h2><div id="assets"></div></section>
+      <div class="sheet-head"><strong>Parts</strong><button id="inspectorClose" aria-label="Close parts">Close</button></div>
+      <section><h2>Character parts</h2><div id="assets"></div></section>
       <section id="properties"><h2>Properties</h2><p class="muted">Select an extracted asset.</p></section>
       <section class="mask-tools"><h2>Mask tools</h2><div class="row"><button data-sheet-tool="erase">Erase</button><button data-sheet-tool="restore">Restore</button></div></section>
+      <section class="artwork-view"><h2>Artwork view</h2><div class="row"><button id="toggleMaster">Image: on</button><button id="rawMaster">Edits: on</button></div><button id="removeBackground">Remove edge background</button><label>Image opacity <input id="masterOpacity" type="range" min="0" max="100" value="100"></label></section>
       <section><h2>Seam QA</h2><label>Leg test <input id="legAngle" type="range" min="-20" max="20" value="0"><output id="legAngleValue">0°</output></label><button id="recompose">Preview recomposition</button><ul id="warnings"></ul></section>
     </aside>
   </main>
 
   <footer>
-    <div class="timeline-actions"><button id="duplicate">Duplicate</button><button id="deleteFrame">Delete</button><button id="timelineSettings" aria-expanded="false" aria-controls="settingsPanel">Settings</button></div>
-    <div class="timeline-scroll"><div class="transport"><button id="previous" aria-label="Previous frame">◀</button><button id="play" class="primary" aria-label="Play">▶</button><button id="next" aria-label="Next frame">▶</button><button id="newFrame">+ Empty</button></div><div id="timeline"></div></div>
+    <div class="timeline-actions"><button id="timelineSettings" aria-expanded="false" aria-controls="settingsPanel">Frame actions</button></div>
+    <div class="timeline-scroll"><div class="transport"><button id="previous" aria-label="Previous frame">◀</button><button id="play" class="primary" aria-label="Play">▶</button><button id="next" aria-label="Next frame">▶</button><button id="newFrame">+ Add frame</button></div><div id="timeline"></div></div>
   </footer>
   <aside class="sheet settings-panel" id="settingsPanel" aria-label="Frame settings" aria-hidden="true">
     <div class="sheet-head"><strong>Frame settings</strong><button data-sheet-close aria-label="Close frame settings">Close</button></div>
-    <div class="sheet-body"><label>FPS <input id="fps" type="number" min="1" max="30" value="10"></label><label><input id="onionPrev" type="checkbox"> Previous onion skin</label><label><input id="onionNext" type="checkbox"> Next onion skin</label><label>Onion opacity <input id="onionOpacity" type="range" min="5" max="70" value="25"></label><button id="copyRegion">Copy selected region</button><button id="pastePatch">Paste in place</button></div>
+    <div class="sheet-body"><div class="row"><button id="duplicate">Duplicate frame</button><button id="deleteFrame" class="danger">Delete frame</button></div><hr><label>Speed (FPS) <input id="fps" type="number" min="1" max="30" value="10"></label><label><input id="onionPrev" type="checkbox"> Show previous frame</label><label><input id="onionNext" type="checkbox"> Show next frame</label><label>Guide opacity <input id="onionOpacity" type="range" min="5" max="70" value="25"></label><button id="copyRegion">Copy selected area</button><button id="pastePatch">Paste into this frame</button></div>
   </aside>
-  <button id="framesSummary">Frames: 8 · Open Frame mode</button>
+  <button id="framesSummary">8 frames · Start animating</button>
   <div id="toast" role="status"></div>
   <script src="../vendor/jszip.min.js"></script><script type="module" src="app.js"></script>
 </body>

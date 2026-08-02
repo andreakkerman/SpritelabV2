@@ -20,7 +20,7 @@ jobs:
         with: { python-version: "3.12" }
       - run: python tools/check_frontend.py
       - uses: actions/setup-node@v4
-        with: { node-version: 20, cache: npm }
+        with: { node-version: 24, cache: npm }
       - run: npm ci
       - run: npm run check
       - name: Browser QA with system Chrome
