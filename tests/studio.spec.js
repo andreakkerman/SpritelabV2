@@ -55,8 +55,19 @@ test('Studio sheets share dismissal and exclusivity behavior',async({page})=>{
 
 test('New project cancel preserves work and confirm returns to onboarding',async({page})=>{
   await page.goto('/studio/');await page.setInputFiles('#masterInput',{name:'master.png',mimeType:'image/png',buffer:masterPng()});
-  await page.locator('#moreToggle').click();page.once('dialog',dialog=>dialog.dismiss());await page.locator('#newProject').click();await expect(page.locator('#dimensions')).toHaveText('80 × 80');
-  page.once('dialog',dialog=>dialog.accept());await page.locator('#newProject').click();await expect(page.locator('#empty')).toBeVisible();await expect(page.locator('#dimensions')).toHaveText('No master');expect(await page.evaluate(()=>window.SpriteStudioTest.project().rigAssets)).toEqual([]);
+  await page.locator('#moreToggle').click();await page.locator('#newProject').click();await expect(page.locator('#newProjectConfirm')).toBeVisible();await page.locator('#cancelNewProject').click();await expect(page.locator('#dimensions')).toHaveText('80 × 80');
+  await page.locator('#newProject').click();await page.locator('#confirmNewProject').click();await expect(page.locator('#empty')).toBeVisible();await expect(page.locator('#dimensions')).toHaveText('No master');expect(await page.evaluate(()=>window.SpriteStudioTest.project().rigAssets)).toEqual([]);await expect(page.locator('#sheetBackdrop')).toBeHidden();
+});
+
+test('permanent navigation, contextual timeline and repeated sheet cycles stay reliable',async({page})=>{
+  await page.setViewportSize({width:390,height:844});await page.goto('/studio/');
+  for(let cycle=0;cycle<3;cycle++){
+    await expect(page.locator('#assetMode')).toBeVisible();await expect(page.locator('#frameMode')).toBeVisible();await expect(page.locator('#moreToggle')).toBeVisible();
+    await page.locator('#moreToggle').click();await expect(page.locator('#morePanel')).toHaveClass(/open/);await page.locator('#moreToggle').click();
+    await page.locator('#inspectorToggle').click();await expect(page.locator('#inspectorPanel')).toHaveClass(/open/);await page.locator('#inspectorToggle').click();
+    await page.locator('#frameMode').click();await expect(page.locator('footer')).toBeVisible();await expect(page.locator('#timelineSettings')).toBeVisible();await page.locator('#timelineSettings').click();await expect(page.locator('#settingsPanel')).toHaveClass(/open/);await page.locator('[data-sheet-close]').last().click();await page.locator('#assetMode').click();await expect(page.locator('footer')).toBeHidden();
+  }
+  expect(await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth,backdrop:!document.querySelector('#sheetBackdrop').hidden,sheetOpen:document.body.classList.contains('sheet-open')}))).toEqual({overflow:false,backdrop:false,sheetOpen:false});
 });
 
 test('missing asset guides extraction and selection tools clear stale state',async({page})=>{
