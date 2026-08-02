@@ -1,0 +1,46 @@
+/* Final mobile workspace corrections. */
+@media (max-width: 820px), (max-height: 500px) {
+  /* Artwork exposes exactly the four tools needed for preparation. */
+  body[data-mode="asset"] .tools [data-tool="select"],
+  body[data-mode="asset"] .tools [data-tool="polygon"],
+  body[data-mode="asset"] .tools [data-tool="erase"],
+  body[data-mode="asset"] .tools #inspectorToggle {
+    display: flex;
+  }
+
+  body[data-mode="asset"] .tools [data-tool="move"],
+  body[data-mode="asset"] .tools [data-tool="rotate"] {
+    display: none;
+  }
+
+  body[data-mode="asset"] .tools {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  body[data-mode="asset"] .tools button {
+    width: auto;
+    min-width: 0;
+    justify-content: center;
+  }
+
+  /* Project is a separate workspace; artwork controls must not compete with it. */
+  body[data-open-sheet="more"] .tools {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .more-menu-panel {
+    top: auto;
+    bottom: 0;
+    max-height: calc(100dvh - var(--safe-top) - 12px);
+    padding-bottom: max(var(--safe-bottom), 12px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .more-menu-panel .sheet-body {
+    padding-bottom: calc(16px + var(--safe-bottom));
+  }
+}
