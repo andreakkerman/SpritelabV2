@@ -128,3 +128,21 @@ test('focused touch navigation and compare controls work at iPhone orientations'
     await page.locator('#settingsPanel [data-sheet-close]').click();await page.locator('#inspectorToggle').click();await page.locator('.asset[data-id]').click();for(const selector of ['#propX','#propY','#rotation','[data-step="x:-1"]','[data-step="rotation:1"]'])await expect(page.locator(selector)).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);
   }
 });
+
+test('Head, joint repair, layers, and Demo walk remain contextual and persistent',async({page})=>{
+  await page.setViewportSize({width:390,height:844});await page.goto('/studio/');
+  await expect(page.locator('#role option[value="head"]')).toHaveText('Head');
+  await page.setInputFiles('#masterInput',{name:'features.png',mimeType:'image/png',buffer:masterPng()});
+  const parts=[['upper_body',{x:4,y:4,width:72,height:18}],['head',{x:24,y:4,width:30,height:18}],['left_upper_leg',{x:4,y:24,width:30,height:25}],['left_lower_leg',{x:4,y:48,width:30,height:28}]];
+  for(const [role,rect] of parts)await page.evaluate(async({role,rect})=>{window.SpriteStudioTest.selectRect(rect);window.SpriteStudioTest.setRole(role);await window.SpriteStudioTest.extract()},{role,rect});
+  expect(await page.evaluate(()=>{const p=window.SpriteStudioTest.project(),h=p.rigAssets.find(a=>a.role==='head'),b=p.rigAssets.find(a=>a.role==='upper_body');return h.parentId===b.id})).toBe(true);
+  await page.locator('#frameMode').click();await page.locator('#inspectorToggle').click();await page.locator('.asset[data-id]').filter({hasText:'Left upper leg'}).click();
+  await expect(page.locator('#setJoint')).toBeVisible();await expect(page.locator('#fixJoint')).toBeDisabled();
+  await page.locator('#setJoint').click();const canvas=page.locator('#canvas'),box=await canvas.boundingBox();
+  await canvas.dispatchEvent('pointerdown',{pointerId:7,pointerType:'touch',clientX:box.x+box.width/2,clientY:box.y+box.height/2,buttons:1});await canvas.dispatchEvent('pointerup',{pointerId:7,pointerType:'touch',clientX:box.x+box.width/2,clientY:box.y+box.height/2});
+  await page.locator('#inspectorToggle').click();await page.locator('.asset[data-id]').filter({hasText:'Left upper leg'}).click();await expect(page.locator('#fixJoint')).toBeEnabled();await page.locator('#fixJoint').click();
+  await expect(page.locator('[data-cover="left"]')).toContainText('Joint cover');await expect(page.locator('#coverSize')).toHaveValue('medium');await page.locator('#coverColor').fill('#ff0000');await page.locator('#coverSize').selectOption('large');
+  await page.locator('[data-id]').filter({hasText:'Head'}).click();await page.locator('#bringForward').click();await page.locator('#sendBackward').click();
+  await page.locator('#inspectorClose').click();await page.locator('#timelineSettings').click();await page.locator('#demoWalk').click();await expect(page.locator('#demoDialog')).toBeVisible();await expect(page.locator('#demoDirection')).toHaveValue('right');await page.locator('#demoDirection').selectOption('ping-pong');await page.locator('#demoSpeed').selectOption('fast');const before=await page.evaluate(()=>JSON.stringify(window.SpriteStudioTest.project()));await page.waitForTimeout(150);await page.locator('#closeDemo').click();expect(await page.evaluate(()=>JSON.stringify(window.SpriteStudioTest.project()))).toBe(before);
+  await expect(page.locator('#demoDialog')).toBeHidden();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);
+});
