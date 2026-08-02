@@ -44,3 +44,4 @@
     padding-bottom: calc(16px + var(--safe-bottom));
   }
 }
+@media(max-width:500px){#demoDialog{width:calc(100vw - 16px);max-height:calc(100dvh - 16px);padding:8px}.demo-shell{gap:8px}.demo-preview{width:min(100%,calc(38dvh * 16 / 9))}.demo-controls{display:grid;grid-template-columns:1fr 1fr}.demo-controls button{grid-column:1/-1}.demo-controls label{min-width:0}.demo-controls select{min-width:0;max-width:100%}.demo-footer button{width:100%}}
