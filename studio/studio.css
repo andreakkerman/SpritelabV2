@@ -16,3 +16,25 @@ footer{height:116px;border-top:1px solid var(--line);background:#141c1e}.transpo
 @media(max-height:500px) and (orientation:landscape){body{grid-template-rows:44px 48px minmax(0,1fr) auto;padding-top:0}header{padding-top:0}.toolbar{height:48px}.tools{flex-basis:52px}.tools button{min-height:42px}.sheet{max-height:85dvh}footer{max-height:112px}.transport{height:54px}#timeline{height:54px}}
 @media(min-width:821px) and (min-height:501px){.inspector{position:fixed;z-index:31;top:116px;right:0;bottom:0;width:320px;max-width:calc(100vw - 24px);overflow-y:auto;overscroll-behavior:contain;border:1px solid var(--line);background:var(--panel);transform:translateX(105%);transition:transform .2s}.inspector.open{transform:none}}
 body[data-mode="frame"] .tools [data-tool="polygon"],body[data-mode="frame"] .tools [data-tool="erase"],body[data-mode="frame"] .tools [data-tool="restore"]{display:none}
+
+/* Stable navigation and compact, safe-area-aware mobile controls. */
+.project-trigger{order:3}.confirm{padding:10px;border:1px solid var(--danger);border-radius:8px}.confirm p{margin:0 0 8px;white-space:normal}.sheet-body hr{border:0;border-top:1px solid var(--line)}
+.settings-panel{position:fixed;z-index:31;top:74px;right:12px;width:min(320px,calc(100vw - 24px));max-height:calc(100dvh - 86px);overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel);display:none}.settings-panel.open{display:block}
+footer{display:flex}.timeline-actions{flex:0 0 auto;display:flex;gap:6px;align-items:center;padding:7px;border-right:1px solid var(--line)}.timeline-scroll{display:flex;min-width:0;overflow-x:auto}.timeline-scroll .transport{flex:0 0 auto}.timeline-scroll #timeline{height:100%;overflow:visible}.frame{min-width:78px}
+body.sheet-open .toolbar{pointer-events:none}
+/* Explicit sheet layers: backdrop 100, active trigger rail 110, sheet 120. */
+#sheetBackdrop{z-index:100}.sheet{z-index:120!important}body.sheet-open header,body.sheet-open .tools,body.sheet-open footer{pointer-events:none}body[data-open-sheet="more"] header,body[data-open-sheet="inspector"] .tools,body[data-open-sheet="settings"] footer{position:relative;z-index:110}body[data-open-sheet="more"] #moreToggle,body[data-open-sheet="inspector"] #inspectorToggle,body[data-open-sheet="settings"] #timelineSettings{position:relative;z-index:111;pointer-events:auto}
+@media(max-width:820px),(max-height:500px){
+ header{position:relative;z-index:10}.project-trigger{min-height:40px;padding:5px 8px}header nav button{padding-inline:9px}
+ .toolbar{overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) repeat(3,auto)}.toolbar>*{min-width:0}.toolbar .file{justify-content:center;overflow:hidden;text-overflow:ellipsis}
+ .canvasbar{height:26px;flex-basis:26px;padding:5px 9px}.canvasbar #dimensions,.canvasbar #zoom,.canvasbar #modeLabel{display:none}
+ .tools{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;overflow:hidden;padding-inline:7px}.tools button{min-width:0;padding-inline:2px}
+ body[data-mode="asset"] .tools [data-tool="erase"],body[data-mode="asset"] .tools [data-tool="restore"],body[data-mode="asset"] .tools [data-tool="pan"],body[data-mode="asset"] #framesAction{display:none}
+ body[data-mode="frame"] .tools [data-tool="select"]{display:none}
+ .settings-panel{position:fixed;z-index:31;left:0;right:0;top:auto;bottom:0;width:auto;max-height:min(72dvh,calc(100dvh - var(--safe-top) - 20px));overflow-y:auto;border-radius:16px 16px 0 0;padding-bottom:var(--safe-bottom);transform:translateY(105%);transition:transform .2s;display:block}.settings-panel.open{transform:none}
+ footer{height:112px;max-height:112px;padding-bottom:var(--safe-bottom)}.timeline-actions{flex-direction:column;padding:5px}.timeline-actions button{min-height:31px;height:31px;padding:3px 7px;font-size:11px}.timeline-scroll{height:100%}.timeline-scroll .transport,#timeline{height:100%;padding:6px 4px}.frame{min-width:70px}
+}
+
+/* Keep all sheet triggers physically tappable above both backdrop and open sheet. */
+body.sheet-open header,body.sheet-open .tools,body.sheet-open footer{position:relative;z-index:125}
+body.sheet-open #moreToggle,body.sheet-open #inspectorToggle,body.sheet-open #timelineSettings{position:relative;z-index:130;pointer-events:auto}
