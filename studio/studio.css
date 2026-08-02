@@ -34,3 +34,7 @@ body.sheet-open .toolbar{pointer-events:none}
  .settings-panel{position:fixed;z-index:31;left:0;right:0;top:auto;bottom:0;width:auto;max-height:min(72dvh,calc(100dvh - var(--safe-top) - 20px));overflow-y:auto;border-radius:16px 16px 0 0;padding-bottom:var(--safe-bottom);transform:translateY(105%);transition:transform .2s;display:block}.settings-panel.open{transform:none}
  footer{height:112px;max-height:112px;padding-bottom:var(--safe-bottom)}.timeline-actions{flex-direction:column;padding:5px}.timeline-actions button{min-height:31px;height:31px;padding:3px 7px;font-size:11px}.timeline-scroll{height:100%}.timeline-scroll .transport,#timeline{height:100%;padding:6px 4px}.frame{min-width:70px}
 }
+
+/* Keep all sheet triggers physically tappable above both backdrop and open sheet. */
+body.sheet-open header,body.sheet-open .tools,body.sheet-open footer{position:relative;z-index:125}
+body.sheet-open #moreToggle,body.sheet-open #inspectorToggle,body.sheet-open #timelineSettings{position:relative;z-index:130;pointer-events:auto}
