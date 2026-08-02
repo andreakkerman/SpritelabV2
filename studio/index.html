@@ -38,7 +38,7 @@
       <button id="inspectorToggle" aria-expanded="false" aria-controls="inspectorPanel">▦<span>Parts</span></button>
     </aside>
     <section class="workspace">
-      <div class="canvasbar"><strong id="workspaceGoal">Prepare artwork</strong><span id="dimensions">No image</span><span id="toolStatus">Navigate</span><span id="zoom">100%</span></div>
+      <div class="canvasbar"><strong id="workspaceGoal">Prepare artwork</strong><span id="dimensions">No image</span><label class="background-mode">Background <select id="canvasBackground"><option value="checker">Checker</option><option value="black">Black</option><option value="white">White</option></select></label><span id="toolStatus">Navigate</span><span id="zoom">100%</span></div>
       <div id="viewport">
         <canvas id="canvas"></canvas>
         <div id="empty">
@@ -54,12 +54,12 @@
     </section>
     <div id="sheetBackdrop" hidden></div>
     <aside class="sheet inspector" id="inspectorPanel" aria-label="Assets and properties" aria-hidden="true">
-      <div class="sheet-head"><strong>Parts</strong><button id="inspectorClose" aria-label="Close parts">Close</button></div>
+      <div class="sheet-head"><strong>Parts</strong><div class="inspector-level"><button id="basicInspector" class="active">Basic</button><button id="advancedInspector">Advanced</button></div><button id="inspectorClose" aria-label="Close parts">Close</button></div>
       <section><h2>Character parts</h2><div id="assets"></div></section>
       <section id="properties"><h2>Properties</h2><p class="muted">Select an extracted asset.</p></section>
-      <section class="mask-tools"><h2>Mask tools</h2><div class="row"><button data-sheet-tool="erase">Erase</button><button data-sheet-tool="restore">Restore</button></div></section>
-      <section class="artwork-view"><h2>Artwork view</h2><div class="row"><button id="toggleMaster">Image: on</button><button id="rawMaster">Edits: on</button></div><button id="removeBackground">Remove edge background</button><label>Image opacity <input id="masterOpacity" type="range" min="0" max="100" value="100"></label></section>
-      <section><h2>Seam QA</h2><label>Leg test <input id="legAngle" type="range" min="-20" max="20" value="0"><output id="legAngleValue">0°</output></label><button id="recompose">Preview recomposition</button><ul id="warnings"></ul></section>
+      <section class="mask-tools advanced-only"><h2>Mask tools</h2><div class="row"><button data-sheet-tool="erase">Erase</button><button data-sheet-tool="restore">Restore</button></div></section>
+      <section class="artwork-view advanced-only"><h2>Artwork view</h2><div class="row"><button id="toggleMaster">Image: on</button><button id="rawMaster">Edits: on</button></div><button id="removeBackground">Remove edge background</button><label>Image opacity <input id="masterOpacity" type="range" min="0" max="100" value="100"></label></section>
+      <section class="advanced-only"><h2>Seam QA</h2><label>Leg test <input id="legAngle" type="range" min="-20" max="20" value="0"><output id="legAngleValue">0°</output></label><button id="recompose">Preview recomposition</button><ul id="warnings"></ul></section>
     </aside>
   </main>
 
