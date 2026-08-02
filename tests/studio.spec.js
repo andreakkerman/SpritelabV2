@@ -88,7 +88,7 @@ test('workspaces expose only task-relevant controls',async({page})=>{
   await page.setViewportSize({width:390,height:844});await page.goto('/studio/');
   await expect(page.locator('[data-tool="select"]')).toBeVisible();await expect(page.locator('[data-tool="rotate"]')).toBeHidden();await expect(page.locator('#importLabel')).toBeVisible();await expect(page.locator('footer')).toBeHidden();
   await page.locator('#frameMode').click();await expect(page.locator('[data-tool="select"]')).toBeHidden();await expect(page.locator('[data-tool="rotate"]')).toBeVisible();await expect(page.locator('#importLabel')).toBeHidden();await expect(page.locator('footer')).toBeVisible();
-  await expect(page.locator('#duplicate')).toBeHidden();await page.locator('#timelineSettings').click();await expect(page.locator('#duplicate')).toBeVisible();await expect(page.locator('#deleteFrame')).toBeVisible();
+  await expect(page.locator('#duplicate')).toBeHidden();await expect(page.locator('#deleteFrame')).toBeHidden();await page.locator('#timelineSettings').click();await expect(page.locator('#duplicate')).toBeVisible();await expect(page.locator('#deleteFrame')).toBeVisible();await page.locator('#settingsPanel [data-sheet-close]').click();await expect(page.locator('#duplicate')).toBeHidden();await expect(page.locator('#deleteFrame')).toBeHidden();
 });
 
 test('mobile progressive disclosure does not overlap controls',async({page})=>{
