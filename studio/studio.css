@@ -62,3 +62,5 @@ body[data-mode="asset"] .timeline-actions{display:none}
  body[data-mode="frame"] .timeline-scroll .transport{grid-column:1;grid-row:1}
  .canvasbar #workspaceGoal{display:block}
 }
+
+.precision{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;grid-column:1/-1}.precision button{min-width:0}.delta-values{font-variant-numeric:tabular-nums;font-size:.84rem;padding:8px;border-radius:8px;background:#182225}.drift-warning{color:#ffc85a;font-size:.82rem;margin:6px 0}
