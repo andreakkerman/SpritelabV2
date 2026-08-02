@@ -113,3 +113,18 @@ test('iPhone Frame mode keeps navigation, tools, and timeline reachable',async({
   }
   expect(errors).toEqual([]);
 });
+
+
+test('focused touch navigation and compare controls work at iPhone orientations',async({page})=>{
+  for(const [width,height] of [[390,844],[844,390]]){
+    await page.setViewportSize({width,height});await page.goto('/studio/');await page.setInputFiles('#masterInput',{name:'touch.png',mimeType:'image/png',buffer:masterPng()});
+    await expect(page.locator('#toolStatus')).toHaveText('Navigate');expect(await page.evaluate(()=>window.SpriteStudioTest.tool())).toBe('navigate');
+    const canvas=page.locator('#canvas'),box=await canvas.boundingBox(),at=(type,id,x,y)=>page.evaluate(({type,id,x,y})=>document.querySelector('#canvas').dispatchEvent(new PointerEvent(type,{pointerId:id,pointerType:'touch',clientX:x,clientY:y,bubbles:true,buttons:type==='pointerup'?0:1})),{type,id,x,y});
+    await at('pointerdown',1,box.x+40,box.y+40);await at('pointermove',1,box.x+90,box.y+80);await at('pointerup',1,box.x+90,box.y+80);expect(await page.evaluate(()=>window.SpriteStudioTest.selection())).toBeNull();
+    await page.locator('[data-tool="select"]').click();await at('pointerdown',2,box.x+30,box.y+30);await at('pointermove',2,box.x+70,box.y+70);await at('pointerdown',3,box.x+100,box.y+100);await at('pointermove',3,box.x+120,box.y+110);await at('pointerup',3,box.x+120,box.y+110);await at('pointerup',2,box.x+70,box.y+70);expect(await page.evaluate(()=>window.SpriteStudioTest.selection())).toBeNull();
+    await page.locator('[data-tool="polygon"]').click();await at('pointerdown',4,box.x+30,box.y+30);await at('pointermove',4,box.x+70,box.y+30);await at('pointerup',4,box.x+70,box.y+30);expect(await page.evaluate(()=>window.SpriteStudioTest.selection())).toBeNull();
+    await page.evaluate(async()=>{window.SpriteStudioTest.selectRect({x:4,y:4,width:60,height:60});window.SpriteStudioTest.setRole('upper_body');await window.SpriteStudioTest.extract();window.SpriteStudioTest.setMode('frame');window.SpriteStudioTest.setActiveFrame(1)});
+    await page.locator('#timelineSettings').click();await expect(page.locator('#comparePrevious')).toBeEnabled();await page.locator('#comparePrevious').check();await expect(page.locator('#compareControls')).toBeVisible();await page.locator('#compareAnchor').selectOption({index:1});await expect(page.locator('#anchorDelta')).toContainText('ΔX');
+    await page.locator('#settingsPanel [data-sheet-close]').click();await page.locator('#inspectorToggle').click();await page.locator('.asset[data-id]').click();for(const selector of ['#propX','#propY','#rotation','[data-step="x:-1"]','[data-step="rotation:1"]'])await expect(page.locator(selector)).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);
+  }
+});

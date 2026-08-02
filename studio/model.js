@@ -15,6 +15,23 @@ export function assetWorldTransform(assets,frame,id,rotationOffset=()=>0,stack=n
   const next=new Set(stack);next.add(id);return multiply(assetWorldTransform(assets,frame,asset.parentId,rotationOffset,next),local);
 }
 export const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+export const ARTWORK_DEFAULT_TOOL="navigate";
+export const POLYGON_TAP_THRESHOLD=6;
+export const artworkToolAfter=(action,current=ARTWORK_DEFAULT_TOOL)=>["enter","cancel","complete","create"].includes(action)?ARTWORK_DEFAULT_TOOL:current;
+export const isPolygonTap=(start,end,threshold=POLYGON_TAP_THRESHOLD)=>Math.hypot(end.x-start.x,end.y-start.y)<=threshold;
+export const secondPointerState=()=>({cancelUncommittedRectangle:true,navigation:true});
+export function anchorDelta(assets,previous,current,id){
+  const asset=assets.find(item=>item.id===id);if(!asset)return null;
+  const point={x:asset.position.x+asset.pivot.x*asset.width,y:asset.position.y+asset.pivot.y*asset.height};
+  const before=assetWorldTransform(assets,previous,id),after=assetWorldTransform(assets,current,id);
+  return{x:transformPoint(after,point).x-transformPoint(before,point).x,y:transformPoint(after,point).y-transformPoint(before,point).y,rotation:Math.atan2(after.b,after.a)*180/Math.PI-Math.atan2(before.b,before.a)*180/Math.PI};
+}
+export const hasAnchorDrift=delta=>!!delta&&(Math.abs(delta.x)>1||Math.abs(delta.y)>1||Math.abs(delta.rotation)>.5);
+export function copyAssetPose(previous,current,id){
+  const source=previous?.assetOverrides?.[id]||{},target=current.assetOverrides[id]||{};
+  current.assetOverrides[id]={...target};for(const key of ["x","y","rotation"]){if(key in source)current.assetOverrides[id][key]=source[key];else delete current.assetOverrides[id][key]}
+  if(!Object.keys(current.assetOverrides[id]).length)delete current.assetOverrides[id];return current;
+}
 export function createViewport(){return {scale:1,offsetX:0,offsetY:0}}
 export function documentToScreen(view,p){return{x:p.x*view.scale+view.offsetX,y:p.y*view.scale+view.offsetY}}
 export function screenToDocument(view,p){return{x:(p.x-view.offsetX)/view.scale,y:(p.y-view.offsetY)/view.scale}}
