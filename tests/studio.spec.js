@@ -49,7 +49,7 @@ test('Studio sheets share dismissal and exclusivity behavior',async({page})=>{
   await moreToggle.click();await expectSheet(more,moreToggle,false);await expect(backdrop).toBeHidden();
   await moreToggle.click();await backdrop.click({position:{x:2,y:120}});await expectSheet(more,moreToggle,false);
   await assetsToggle.click();await expectSheet(assets,assetsToggle,true);await moreToggle.click();await expectSheet(assets,assetsToggle,false);await expectSheet(more,moreToggle,true);
-  await page.locator('[data-sheet-close]').click();await expectSheet(more,moreToggle,false);
+  await page.locator('#morePanel [data-sheet-close]').click();await expectSheet(more,moreToggle,false);
   await moreToggle.click();await page.keyboard.press('Escape');await expectSheet(more,moreToggle,false);
   await assetsToggle.click();await expectSheet(assets,assetsToggle,true);await assetsToggle.click();await expectSheet(assets,assetsToggle,false);
   await assetsToggle.click();await backdrop.click({position:{x:2,y:120}});await expectSheet(assets,assetsToggle,false);
