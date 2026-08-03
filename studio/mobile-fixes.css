@@ -78,17 +78,18 @@
   .inspector>section:last-child{padding-bottom:calc(32px + var(--safe-bottom))}
   .settings-panel>.sheet-body,.more-menu-panel>.sheet-body{min-height:0;overflow-y:auto;padding-bottom:calc(76px + var(--safe-bottom))}
 
-  /* Normal chrome stays below sheets; only the active trigger is promoted. */
-  body.sheet-open header{z-index:var(--z-sheet-trigger)}
-  body.sheet-open .toolbar,body.sheet-open .tools,body.sheet-open footer{position:relative;z-index:auto;pointer-events:none}
-  body[data-open-sheet="inspector"] .tools #inspectorToggle,
-  body[data-open-sheet="settings"] #timelineSettings{
-    position:fixed;right:12px;bottom:calc(12px + var(--safe-bottom));z-index:var(--z-sheet-trigger);
-    display:flex!important;visibility:visible!important;pointer-events:auto;min-width:96px;min-height:44px;
-    align-items:center;justify-content:center;box-shadow:0 4px 18px #000a;
+  /* Containers remain inert; only the three permanent trigger buttons are promoted. */
+  body.sheet-open header,body.sheet-open .toolbar,body.sheet-open .tools,body.sheet-open footer{position:relative;z-index:auto;pointer-events:none}
+  body.sheet-open #moreToggle,body.sheet-open #inspectorToggle,body.sheet-open #timelineSettings{
+    position:fixed;z-index:var(--z-sheet-trigger);display:flex!important;visibility:visible!important;
+    pointer-events:auto;min-width:96px;min-height:44px;align-items:center;justify-content:center;
+    box-shadow:0 4px 18px #000a;
   }
-  body[data-open-sheet="more"] #moreToggle{position:relative;z-index:var(--z-sheet-trigger);visibility:visible;pointer-events:auto}
+  body.sheet-open #moreToggle{top:calc(4px + var(--safe-top));right:8px;bottom:auto;left:auto}
+  body.sheet-open #inspectorToggle{right:12px;bottom:calc(12px + var(--safe-bottom));left:auto;top:auto}
+  body.sheet-open #timelineSettings{left:12px;bottom:calc(12px + var(--safe-bottom));right:auto;top:auto}
   body.sheet-open #framesSummary{visibility:hidden;pointer-events:none}
+  body:not(.sheet-open)[data-mode="frame"] footer{position:relative;z-index:var(--z-app);pointer-events:auto}
 
   .field{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
   .field label{min-width:0;white-space:normal;flex-wrap:wrap}
