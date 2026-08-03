@@ -36,10 +36,6 @@ body.sheet-open .toolbar{pointer-events:none}
  footer{height:calc(112px + var(--safe-bottom));max-height:calc(112px + var(--safe-bottom));display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);grid-template-rows:52px 60px;padding-bottom:var(--safe-bottom);overflow:hidden}.timeline-actions{grid-column:1;grid-row:1;min-width:0;display:flex;flex-direction:row;gap:3px;padding:5px;border-right:1px solid var(--line)}.timeline-actions button,.transport button{flex:1 1 0;min-width:0;min-height:40px;height:40px;padding:4px 3px;font-size:11px;overflow:hidden;text-overflow:ellipsis}.timeline-scroll{display:contents}.timeline-scroll .transport{grid-column:2;grid-row:1;min-width:0;height:52px;padding:5px 4px;gap:3px;overflow:visible}.timeline-scroll #timeline{grid-column:1/-1;grid-row:2;min-width:0;width:100%;height:60px;padding:6px 7px;overflow-x:auto;overflow-y:hidden}.frame{flex:0 0 70px;min-width:70px}
 }
 
-/* Keep all sheet triggers physically tappable above both backdrop and open sheet. */
-body.sheet-open header,body.sheet-open .tools,body.sheet-open footer{position:relative;z-index:125}
-body.sheet-open #moreToggle,body.sheet-open #inspectorToggle,body.sheet-open #timelineSettings{position:relative;z-index:130;pointer-events:auto}
-
 /* Task-focused workspaces: only controls for the current job remain visible. */
 header nav{display:flex;gap:4px;padding:3px;border:1px solid var(--line);border-radius:10px;background:#0e1416}
 header nav button{border:0;background:transparent;min-height:36px}
