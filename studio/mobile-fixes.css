@@ -96,7 +96,6 @@ body.sheet-open #moreToggle,body.sheet-open #inspectorToggle,body.sheet-open #ti
   body.sheet-open #moreToggle{top:calc(4px + var(--safe-top));right:8px;bottom:auto;left:auto}
   body.sheet-open #inspectorToggle{right:12px;bottom:calc(12px + var(--safe-bottom));left:auto;top:auto}
   body.sheet-open #timelineSettings{left:12px;bottom:calc(12px + var(--safe-bottom));right:auto;top:auto}
-  body.sheet-open #framesSummary{visibility:hidden;pointer-events:none}
   body:not(.sheet-open)[data-mode="frame"] footer{position:relative;z-index:var(--z-app);pointer-events:auto}
 
   .field{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}

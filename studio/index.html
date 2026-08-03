@@ -35,6 +35,7 @@
       <button data-tool="select">▱<span>Select</span></button><button data-tool="polygon">⬠<span>Polygon</span></button>
       <button data-tool="move">✥<span>Move</span></button><button data-tool="rotate">↻<span>Rotate</span></button>
       <button data-tool="erase">◯<span>Erase</span></button>
+      <button data-tool="fill">●<span>Fill</span></button>
       <button id="inspectorToggle" aria-expanded="false" aria-controls="inspectorPanel">▦<span>Parts</span></button>
     </aside>
     <section class="workspace">
@@ -55,7 +56,7 @@
     <div id="sheetBackdrop" hidden></div>
     <aside class="sheet inspector" id="inspectorPanel" aria-label="Assets and properties" aria-hidden="true">
       <div class="sheet-head"><strong>Parts</strong><div class="inspector-level"><button id="basicInspector" class="active">Basic</button><button id="advancedInspector">Advanced</button></div><button id="inspectorClose" aria-label="Close parts">Close</button></div>
-      <section><h2>Character parts</h2><div id="assets"></div></section>
+      <section><h2>Layers</h2><div id="assets"></div></section>
       <section id="properties"><h2>Properties</h2><p class="muted">Select an extracted asset.</p></section>
       <section class="mask-tools advanced-only"><h2>Mask tools</h2><div class="row"><button data-sheet-tool="erase">Erase</button><button data-sheet-tool="restore">Restore</button></div></section>
       <section class="artwork-view advanced-only"><h2>Artwork view</h2><div class="row"><button id="toggleMaster">Image: on</button><button id="rawMaster">Edits: on</button></div><button id="removeBackground">Remove edge background</button><label>Image opacity <input id="masterOpacity" type="range" min="0" max="100" value="100"></label></section>
@@ -71,8 +72,7 @@
     <div class="sheet-head"><strong>Frame settings</strong><button data-sheet-close aria-label="Close frame settings">Close</button></div>
     <div class="sheet-body"><button id="demoWalk" data-demo-walk>Demo walk</button><div class="row"><button id="duplicate">Duplicate frame</button><button id="deleteFrame" class="danger">Delete frame</button></div><hr><label>Speed (FPS) <input id="fps" type="number" min="1" max="30" value="10"></label><label><input id="onionPrev" type="checkbox"> Show previous frame</label><label><input id="onionNext" type="checkbox"> Show next frame</label><label>Guide opacity <input id="onionOpacity" type="range" min="5" max="70" value="25"></label><hr><label><input id="comparePrevious" type="checkbox"> Compare previous</label><p id="compareUnavailable" class="muted">Unavailable on frame 1</p><div id="compareControls" hidden><label>Overlay opacity <input id="compareOpacity" type="range" min="5" max="80" value="35"></label><label><input id="showDifferences" type="checkbox"> Show differences</label><label>Anchor <select id="compareAnchor"><option value="">None</option></select></label><div id="anchorDelta" class="delta-values" aria-live="polite"></div><p id="driftWarning" class="drift-warning" hidden>Possible accidental drift — or expected intentional motion.</p><div class="row"><button id="copyAnchorPose">Copy anchor pose from previous</button><button id="alignAnchor">Align current frame to previous anchor</button></div></div><hr><button id="copyRegion">Copy selected area</button><button id="pastePatch">Paste into this frame</button></div>
   </aside>
-  <dialog id="demoDialog" aria-label="Demo walk preview"><div class="demo-shell"><div class="demo-head"><strong>Demo walk</strong></div><div class="demo-preview"><canvas id="demoCanvas"></canvas></div><div class="demo-controls"><button id="demoPlay">Pause</button><label>Direction <select id="demoDirection"><option value="right">Right</option><option value="left">Left</option><option value="ping-pong">Ping-pong</option></select></label><label>Speed <select id="demoSpeed"><option value="slow">Slow</option><option value="normal" selected>Normal</option><option value="fast">Fast</option></select></label></div><div class="demo-footer"><button id="closeDemo">Close</button></div></div></dialog>
-  <button id="framesSummary">8 frames · Start animating</button>
+  <dialog id="demoDialog" aria-label="Demo walk preview"><div class="demo-shell"><div class="demo-head"><strong>Demo walk</strong></div><div class="demo-preview"><canvas id="demoCanvas"></canvas></div><div class="demo-controls"><button id="demoPlay">Pause</button><label>Direction <select id="demoDirection"><option value="right">Right</option><option value="left">Left</option><option value="ping-pong">Ping-pong</option></select></label><label>Speed <select id="demoSpeed"><option value="slow">Slow</option><option value="normal" selected>Normal</option><option value="fast">Fast</option><option value="faster">Faster</option></select></label></div><div class="demo-footer"><button id="closeDemo">Close</button></div></div></dialog>
   <div id="toast" role="status"></div>
   <script src="../vendor/jszip.min.js"></script><script type="module" src="app.js"></script>
 </body>
