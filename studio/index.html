@@ -19,7 +19,7 @@
   <input id="masterInput" class="visually-hidden" type="file" accept="image/png"><input id="frameInput" class="visually-hidden" type="file" accept="image/png"><input id="mergeInput" class="visually-hidden" type="file" accept="image/png">
   <div class="toolbar" aria-label="Project actions">
     <label id="importLabel" class="file primary" for="masterInput">Open image</label>
-    <label id="addFrameImage" class="file primary" for="frameInput">Add sprite frame</label><button id="fit">Fit</button><button id="undo">Undo</button><button id="redo">Redo</button>
+    <label id="addFrameImage" class="file primary" for="frameInput">Add frame</label><button id="fit">Fit</button><button id="undo">Undo</button><button id="redo">Redo</button>
     <aside class="sheet more-menu-panel" id="morePanel" aria-label="More project actions" aria-hidden="true">
       <div class="sheet-head"><strong>Project</strong><button data-sheet-close aria-label="Close project actions">Close</button></div>
       <div class="sheet-body">
@@ -32,11 +32,11 @@
 
   <main>
     <aside class="tools" aria-label="Canvas tools">
-      <button data-tool="select">▱<span>Select</span></button><button data-tool="polygon">⬠<span>Polygon</span></button>
-      <button data-tool="move">✥<span>Move</span></button><button data-tool="scale">⤢<span>Scale</span></button><button data-tool="rotate">↻<span>Rotate</span></button>
-      <button data-tool="erase">◯<span>Erase</span></button>
-      <button data-tool="fill">●<span>Fill</span></button><button id="mergeImages">⇉<span>Merge images</span></button>
-      <button id="inspectorToggle" aria-expanded="false" aria-controls="inspectorPanel">▦<span>Parts</span></button>
+      <button data-tool="select"><span class="tool-icon" aria-hidden="true">▱</span><span class="tool-label">Select</span></button><button data-tool="polygon"><span class="tool-icon" aria-hidden="true">⬠</span><span class="tool-label">Polygon</span></button>
+      <button data-tool="move"><span class="tool-icon" aria-hidden="true">✥</span><span class="tool-label">Move</span></button><button data-tool="scale"><span class="tool-icon" aria-hidden="true">⤢</span><span class="tool-label">Scale</span></button><button data-tool="rotate"><span class="tool-icon" aria-hidden="true">↻</span><span class="tool-label">Rotate</span></button>
+      <button data-tool="erase"><span class="tool-icon" aria-hidden="true">◯</span><span class="tool-label">Erase</span></button>
+      <button data-tool="fill"><span class="tool-icon" aria-hidden="true">●</span><span class="tool-label">Fill</span></button><button id="mergeImages"><span class="tool-icon" aria-hidden="true">⇉</span><span class="tool-label">Merge</span></button>
+      <button id="inspectorToggle" aria-label="Layers" aria-expanded="false" aria-controls="inspectorPanel"><span class="tool-icon" aria-hidden="true">▦</span><span class="tool-label">Layers</span></button>
     </aside>
     <section class="workspace">
       <div class="canvasbar"><strong id="workspaceGoal">Prepare artwork</strong><span id="dimensions">No image</span><label class="background-mode">Background <select id="canvasBackground"><option value="checker">Checker</option><option value="black">Black</option><option value="white">White</option></select></label><span id="toolStatus">Navigate</span><span id="zoom">100%</span></div>
@@ -54,10 +54,10 @@
       </div>
     </section>
     <div id="sheetBackdrop" hidden></div>
-    <aside class="sheet inspector" id="inspectorPanel" aria-label="Assets and properties" aria-hidden="true">
-      <div class="sheet-head"><strong>Parts</strong><div class="inspector-level"><button id="basicInspector" class="active">Basic</button><button id="advancedInspector">Advanced</button></div><button id="inspectorClose" aria-label="Close parts">Close</button></div>
+    <aside class="sheet inspector" id="inspectorPanel" aria-label="Layers and properties" aria-hidden="true">
+      <div class="sheet-head"><strong>Layers</strong><div class="inspector-level"><button id="basicInspector" class="active">Basic</button><button id="advancedInspector">Advanced</button></div><button id="inspectorClose" aria-label="Close layers">Close</button></div>
       <section><h2>Layers</h2><div id="assets"></div></section>
-      <section id="properties"><h2>Properties</h2><p class="muted">Select an extracted asset.</p></section>
+      <section id="properties"><h2>Properties</h2><p class="muted">Select a layer.</p></section>
       <section class="mask-tools advanced-only"><h2>Mask tools</h2><div class="row"><button data-sheet-tool="erase">Erase</button><button data-sheet-tool="restore">Restore</button></div></section>
       <section class="artwork-view advanced-only"><h2>Artwork view</h2><div class="row"><button id="toggleMaster">Image: on</button><button id="rawMaster">Edits: on</button></div><button id="removeBackground">Remove edge background</button><label>Image opacity <input id="masterOpacity" type="range" min="0" max="100" value="100"></label></section>
       <section class="advanced-only"><h2>Seam QA</h2><label>Leg test <input id="legAngle" type="range" min="-20" max="20" value="0"><output id="legAngleValue">0°</output></label><button id="recompose">Preview recomposition</button><ul id="warnings"></ul></section>

@@ -1,3 +1,6 @@
+export const FRAME_BASELINE_BOTTOM_PADDING=20;
+export const frameBaselineY=canvas=>Math.max(0,canvas.height-FRAME_BASELINE_BOTTOM_PADDING);
+export function guideGeometry(canvas,view){const x=canvas.width/2,y=frameBaselineY(canvas);return{x,y,screenX:view.offsetX+x*view.scale,screenY:view.offsetY+y*view.scale,width:canvas.width*view.scale,height:canvas.height*view.scale}}
 export const ROLES=["upper_body","head","pelvis_cover","left_leg","right_leg","left_upper_leg","left_lower_leg","right_upper_leg","right_lower_leg"];
 export const ROLE_LABELS={upper_body:"Upper body",head:"Head",pelvis_cover:"Pelvis cover",left_leg:"Left leg",right_leg:"Right leg",left_upper_leg:"Left upper leg",left_lower_leg:"Left lower leg",right_upper_leg:"Right upper leg",right_lower_leg:"Right lower leg"};
 export const roleLabel=role=>ROLE_LABELS[role]||role.replaceAll("_"," ").replace(/^./,c=>c.toUpperCase());
