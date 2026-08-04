@@ -12,14 +12,14 @@
 <body data-mode="asset">
   <header>
     <a class="brand" href="../"><b>SPRITE<span>LAB</span></b><small>STUDIO</small></a>
-    <nav aria-label="Workspace"><button id="assetMode" class="active"><span>Artwork</span></button><button id="frameMode"><span>Animate</span></button><button id="moreToggle" class="project-trigger" aria-expanded="false" aria-controls="morePanel"><span>Project</span></button></nav>
+    <nav aria-label="Workspace"><button id="assetMode" class="active"><span>Artwork</span></button><button id="frameMode"><span>Frames</span></button><button id="moreToggle" class="project-trigger" aria-expanded="false" aria-controls="morePanel"><span>Project</span></button></nav>
     <div id="saveState">Local-first</div>
   </header>
 
-  <input id="masterInput" class="visually-hidden" type="file" accept="image/png">
+  <input id="masterInput" class="visually-hidden" type="file" accept="image/png"><input id="frameInput" class="visually-hidden" type="file" accept="image/png"><input id="mergeInput" class="visually-hidden" type="file" accept="image/png">
   <div class="toolbar" aria-label="Project actions">
     <label id="importLabel" class="file primary" for="masterInput">Open image</label>
-    <button id="fit">Fit</button><button id="undo">Undo</button><button id="redo">Redo</button>
+    <label id="addFrameImage" class="file primary" for="frameInput">Add sprite frame</label><button id="fit">Fit</button><button id="undo">Undo</button><button id="redo">Redo</button>
     <aside class="sheet more-menu-panel" id="morePanel" aria-label="More project actions" aria-hidden="true">
       <div class="sheet-head"><strong>Project</strong><button data-sheet-close aria-label="Close project actions">Close</button></div>
       <div class="sheet-body">
@@ -33,17 +33,17 @@
   <main>
     <aside class="tools" aria-label="Canvas tools">
       <button data-tool="select">▱<span>Select</span></button><button data-tool="polygon">⬠<span>Polygon</span></button>
-      <button data-tool="move">✥<span>Move</span></button><button data-tool="rotate">↻<span>Rotate</span></button>
+      <button data-tool="move">✥<span>Move</span></button><button data-tool="scale">⤢<span>Scale</span></button><button data-tool="rotate">↻<span>Rotate</span></button>
       <button data-tool="erase">◯<span>Erase</span></button>
-      <button data-tool="fill">●<span>Fill</span></button>
+      <button data-tool="fill">●<span>Fill</span></button><button id="mergeImages">⇉<span>Merge images</span></button>
       <button id="inspectorToggle" aria-expanded="false" aria-controls="inspectorPanel">▦<span>Parts</span></button>
     </aside>
     <section class="workspace">
       <div class="canvasbar"><strong id="workspaceGoal">Prepare artwork</strong><span id="dimensions">No image</span><label class="background-mode">Background <select id="canvasBackground"><option value="checker">Checker</option><option value="black">Black</option><option value="white">White</option></select></label><span id="toolStatus">Navigate</span><span id="zoom">100%</span></div>
       <div id="viewport">
-        <canvas id="canvas"></canvas>
+        <canvas id="canvas"></canvas><div id="guides" aria-hidden="true"><i class="guide-v"></i><i class="guide-h"></i><i class="guide-cross"></i></div>
         <div id="empty">
-          <b>Start with your artwork</b><span>Open the character image you want to turn into animation parts.</span>
+          <b id="emptyTitle">Start with your artwork</b><span id="emptyMessage">Open the character image you want to turn into animation parts.</span>
           <label class="file primary" for="masterInput">Open image</label>
         </div>
         <button id="onboardingHint" hidden aria-label="Dismiss hint">Select a body part, choose its role, then extract it. <span>×</span></button>
@@ -70,8 +70,9 @@
   </footer>
   <aside class="sheet settings-panel" id="settingsPanel" aria-label="Frame settings" aria-hidden="true">
     <div class="sheet-head"><strong>Frame settings</strong><button data-sheet-close aria-label="Close frame settings">Close</button></div>
-    <div class="sheet-body"><button id="demoWalk" data-demo-walk>Demo walk</button><div class="row"><button id="duplicate">Duplicate frame</button><button id="deleteFrame" class="danger">Delete frame</button></div><hr><label>Speed (FPS) <input id="fps" type="number" min="1" max="30" value="10"></label><label><input id="onionPrev" type="checkbox"> Show previous frame</label><label><input id="onionNext" type="checkbox"> Show next frame</label><label>Guide opacity <input id="onionOpacity" type="range" min="5" max="70" value="25"></label><hr><label><input id="comparePrevious" type="checkbox"> Compare previous</label><p id="compareUnavailable" class="muted">Unavailable on frame 1</p><div id="compareControls" hidden><label>Overlay opacity <input id="compareOpacity" type="range" min="5" max="80" value="35"></label><label><input id="showDifferences" type="checkbox"> Show differences</label><label>Anchor <select id="compareAnchor"><option value="">None</option></select></label><div id="anchorDelta" class="delta-values" aria-live="polite"></div><p id="driftWarning" class="drift-warning" hidden>Possible accidental drift — or expected intentional motion.</p><div class="row"><button id="copyAnchorPose">Copy anchor pose from previous</button><button id="alignAnchor">Align current frame to previous anchor</button></div></div><hr><button id="copyRegion">Copy selected area</button><button id="pastePatch">Paste into this frame</button></div>
+    <div class="sheet-body"><label><input id="showGuides" type="checkbox" checked> Show alignment guides</label><button id="demoWalk" data-demo-walk>Demo walk</button><div class="row"><button id="duplicate">Duplicate frame</button><button id="deleteFrame" class="danger">Delete frame</button></div><hr><label>Speed (FPS) <input id="fps" type="number" min="1" max="30" value="10"></label><label><input id="onionPrev" type="checkbox"> Show previous frame</label><label><input id="onionNext" type="checkbox"> Show next frame</label><label>Guide opacity <input id="onionOpacity" type="range" min="5" max="70" value="25"></label><hr><label><input id="comparePrevious" type="checkbox"> Compare previous</label><p id="compareUnavailable" class="muted">Unavailable on frame 1</p><div id="compareControls" hidden><label>Overlay opacity <input id="compareOpacity" type="range" min="5" max="80" value="35"></label><label><input id="showDifferences" type="checkbox"> Show differences</label><label>Anchor <select id="compareAnchor"><option value="">None</option></select></label><div id="anchorDelta" class="delta-values" aria-live="polite"></div><p id="driftWarning" class="drift-warning" hidden>Possible accidental drift — or expected intentional motion.</p><div class="row"><button id="copyAnchorPose">Copy anchor pose from previous</button><button id="alignAnchor">Align current frame to previous anchor</button></div></div><hr><button id="copyRegion">Copy selected area</button><button id="pastePatch">Paste into this frame</button></div>
   </aside>
+  <dialog id="mergeDialog" aria-label="Merge images"><div class="merge-shell"><header><strong>Merge images</strong><span id="mergeStatus">Editing Image A</span></header><div class="merge-controls"><fieldset><legend>View</legend><button data-merge-view="combined" class="active">Combined</button><button data-merge-view="a">Focus A</button><button data-merge-view="b">Focus B</button></fieldset><fieldset><legend>Editing</legend><button data-merge-edit="a" class="active">Image A</button><button data-merge-edit="b">Image B</button></fieldset><label class="file" for="mergeInput">Choose Image B</label><button id="mergeMove">Move</button><button id="mergeScale">Scale</button><button id="mergeErase">Erase</button><button id="mergeRestore">Restore</button><label>Brush <input id="mergeBrush" type="range" min="2" max="80" value="20"></label><button id="mergeUndo">Undo</button><button id="mergeRedo">Redo</button><button id="mergeReset">Reset transform</button><button id="mergeSwap">Swap order</button></div><div id="mergeViewport"><canvas id="mergeCanvas"></canvas><div class="merge-guides" aria-hidden="true"><i class="guide-v"></i><i class="guide-h"></i><i class="guide-cross"></i></div></div><footer><button id="cancelMerge">Cancel</button><button id="acceptMerge" class="primary">Merge</button></footer></div></dialog>
   <dialog id="demoDialog" aria-label="Demo walk preview"><div class="demo-shell"><div class="demo-head"><strong>Demo walk</strong></div><div class="demo-preview"><canvas id="demoCanvas"></canvas></div><div class="demo-controls"><button id="demoPlay">Pause</button><label>Direction <select id="demoDirection"><option value="right">Right</option><option value="left">Left</option><option value="ping-pong">Ping-pong</option></select></label><label>Speed <select id="demoSpeed"><option value="slow">Slow</option><option value="normal" selected>Normal</option><option value="fast">Fast</option><option value="faster">Faster</option></select></label></div><div class="demo-footer"><button id="closeDemo">Close</button></div></div></dialog>
   <div id="toast" role="status"></div>
   <script src="../vendor/jszip.min.js"></script><script type="module" src="app.js"></script>

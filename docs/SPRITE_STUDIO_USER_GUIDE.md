@@ -25,3 +25,11 @@ Sprite Studio is available at [`/studio/`](../studio/) while the existing Animat
 ## Current scope
 
 Patch copy/paste, numeric/pointer movement, and deletion are implemented; patch-specific alpha erasing is deferred. Frame deletion and creation are supported, while drag reorder and thumbnail raster caching are not. Project portability is through ZIP export; importing a complete Studio ZIP on another device is the next planned increment.
+
+## Complete sprite frames and image merging
+
+Cutouts are optional. In **Frames**, choose **Add sprite frame** to place a complete transparent PNG into the current frame. Complete images use the same fixed project canvas, timeline, frame-local Fill and Erase corrections, save/reload storage, and ZIP export as composed cutout frames. Move and Scale adjust only the selected complete image.
+
+Light-blue center and baseline guides are editing overlays and never appear in exported PNGs. Use **Frame actions → Show alignment guides** to toggle them.
+
+Choose **Merge images** to combine the current rendered frame (Image A) with exactly one PNG (Image B). Combined shows the result; Focus A and Focus B make the other image translucent without changing the explicit Editing selection. Move or uniformly Scale either image, Erase or Restore its non-destructive mask, and Swap order. Cancel discards the session. Merge stores one full-canvas transparent PNG as the frame result, so Fill and the existing export pipeline continue to work unchanged.

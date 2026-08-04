@@ -1,6 +1,6 @@
 # SpriteLab V2 — Sprite Studio and Animator
 
-SpriteLab V2 contains **Sprite Studio** at [`/studio/`](studio/) for turning one master PNG into cutouts and independent animation frames, plus the existing static, mobile-first **Animator** at the root for building one deterministic eight-frame Sven walk cycle from fixed transparent parts. The previous full-frame workflow exposed unavoidable visual drift between independently generated sprites. This version keeps Sven’s authoritative artwork fixed and varies only explicit leg transforms. **Image generation is not used to render final frames.**
+SpriteLab V2 contains **Sprite Studio** at [`/studio/`](studio/) for editing complete sprite frames directly or turning one master PNG into reusable cutouts and independent animation frames, plus the existing static, mobile-first **Animator** at the root for building one deterministic eight-frame Sven walk cycle from fixed transparent parts. Studio supports both direct complete-frame correction and reusable cutout animation. The root Animator keeps Sven’s authoritative artwork fixed and varies only explicit leg transforms. **Image generation is not used to render final frames.**
 
 ## Sprite Studio
 
