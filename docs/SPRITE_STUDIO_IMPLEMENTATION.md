@@ -21,3 +21,13 @@ Studio keeps image blobs out of JSON and stores them in a separate IndexedDB obj
 ## Verification record
 
 The supplied 360 × 440 opaque-background character PNG was supplied as a session attachment and inspected as the realistic session reference; it is intentionally not committed because its licensing status is unknown. Automated extraction uses an in-memory deterministic PNG fixture instead. Pure model tests cover all geometry and isolation primitives. A direct Google Chrome package was installed as a fallback after Playwright CDN and Ubuntu Snap installation paths failed. The complete legacy Animator and Studio Playwright suite then passed locally, including master import, four-role extraction, isolated duplication, reload persistence, ZIP inspection, and screenshots.
+
+## Optional complete-image frames
+
+The schema-v2 frame record is extended compatibly with an optional `fullImage` reference (`id`, IndexedDB `blobId`, translation, uniform scale, and erase strokes). Legacy composed frames retain their existing assets, overrides, fills, patches, and masks. Normalization supplies a `null` default, avoiding a project-wide migration. The compositor selects the full image when present and otherwise follows the unchanged cutout render path; fills remain frame-local in both paths.
+
+Merge is an isolated two-image task session. Image A is captured from the existing deterministic frame compositor and Image B is decoded once on selection. View toggles reuse those decoded surfaces. Per-image transforms and stroke masks remain local until acceptance; Cancel therefore has no project side effects. Acceptance renders both sources into the fixed project canvas, stores the resulting transparent PNG by stable ID, and creates one normal project undo snapshot. Guides are DOM overlays positioned from document coordinates and are not part of the export canvas.
+
+## Studio alignment baseline
+
+Studio uses the Animator/Atlas ground convention: a 20-pixel transparent safety area below the ground-contact line. The guide baseline is therefore canvas height minus 20 pixels (`y = 420` on the standard 360 × 440 canvas). One canvas-space helper maps that coordinate through normal or Merge viewport zoom and pan; the DOM guide overlay remains outside exported pixels.
