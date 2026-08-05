@@ -28,7 +28,7 @@ Patch copy/paste, numeric/pointer movement, and deletion are implemented; patch-
 
 ## Complete sprite frames and image merging
 
-Cutouts are optional. In **Frames**, choose **Add frame** to place a complete transparent PNG into the current frame. Complete images use the same fixed project canvas, timeline, frame-local Fill and Erase corrections, save/reload storage, and ZIP export as composed cutout frames. Move and Scale adjust only the selected complete image.
+Cutouts are optional. In **Frames**, choose **Add frame** to set or replace the shared **Base image** for the animation. The base appears immediately in every frame without creating cutouts, while Move, Rotate, Scale, visibility, and Erase changes remain frame-local. Accepted Merge results and frame-local Fill corrections continue to save, reload, and export through the same fixed-canvas ZIP workflow as composed cutout frames.
 
 Light-blue center and baseline guides are editing overlays and never appear in exported PNGs. Use **Frame actions → Show alignment guides** to toggle them.
 
