@@ -34,7 +34,10 @@ test('responsive Studio keeps the mobile workflow reachable at four target viewp
 test('mobile import onboarding and selection actions remain fully reachable',async({page})=>{
   await page.setViewportSize({width:390,height:844});await page.goto('/studio/');
   await expect(page.locator('#empty')).toContainText('Open the character image you want to turn into animation parts.');
-  let chooserPromise=page.waitForEvent('filechooser');await page.locator('#empty label[for="masterInput"]').click();let chooser=await chooserPromise;await chooser.setFiles({name:'mobile-master.png',mimeType:'image/png',buffer:masterPng()});
+  await expect(page.locator('#emptyImportLabel')).toHaveAttribute('for','masterInput');
+  let chooserPromise=page.waitForEvent('filechooser');await page.locator('#emptyImportLabel').click();let chooser=await chooserPromise;await chooser.setFiles({name:'mobile-master.png',mimeType:'image/png',buffer:masterPng()});
+  await expect.poll(()=>page.evaluate(()=>!!window.SpriteStudioTest.project().master)).toBe(true);
+  await expect(page.locator('#toast')).toHaveText('Immutable master loaded');
   await expect(page.locator('#importLabel')).toHaveText('Replace image');
   chooserPromise=page.waitForEvent('filechooser');await page.locator('#importLabel').click();chooser=await chooserPromise;await chooser.setFiles({name:'replacement.png',mimeType:'image/png',buffer:masterPng()});
   await page.evaluate(()=>window.SpriteStudioTest.selectRect({x:4,y:4,width:30,height:30}));await expect(page.locator('#selectionActions')).toBeVisible();await expect(page.locator('#role')).toBeVisible();await expect(page.locator('#extract')).toBeVisible();await expect(page.locator('#cancelSelection')).toBeVisible();await expect(page.locator('#closePolygon')).toBeHidden();
@@ -161,12 +164,17 @@ async function dragMergeAt(page,from,to){const a=await mergeDocumentPoint(page,.
 async function mergePixel(page,x=40,y=40){return page.evaluate(({x,y})=>{const state=window.SpriteStudioTest.mergeState(),canvas=document.querySelector('#mergeCanvas'),dpr=devicePixelRatio||1;return [...canvas.getContext('2d').getImageData(Math.round((state.view.ox+x*state.view.scale)*dpr),Math.round((state.view.oy+y*state.view.scale)*dpr),1,1).data]},{x,y})}
 
 
-test('Frames import creates a shared base image immediately without cutouts',async({page})=>{
+test('Frames empty-state import creates a shared base image immediately without cutouts',async({page})=>{
   await page.goto('/studio/');
   await page.locator('#frameMode').click();
-  await page.setInputFiles('#frameInput',{name:'base.png',mimeType:'image/png',buffer:masterPng()});
+  await expect(page.locator('#emptyTitle')).toHaveText('Start with a frame image');
+  await expect(page.locator('#emptyMessage')).toContainText('shared base for all frames');
+  await expect(page.locator('#emptyImportLabel')).toHaveAttribute('for','frameInput');
+  const chooserPromise=page.waitForEvent('filechooser');await page.locator('#emptyImportLabel').click();const chooser=await chooserPromise;await chooser.setFiles({name:'base.png',mimeType:'image/png',buffer:masterPng()});
   await expect.poll(()=>page.evaluate(()=>!!window.SpriteStudioTest.project().animationBase)).toBe(true);
   await expect(page.locator('body')).toHaveAttribute('data-mode','frame');
+  await expect(page.locator('#toast')).toHaveText('Base image updated for all frames');
+  expect(await page.evaluate(()=>window.SpriteStudioTest.project().master)).toBe(null);
   await page.locator('#inspectorToggle').click();
   await expect(page.locator('[data-base] b')).toHaveText('Base image');
   expect(await page.evaluate(()=>window.SpriteStudioTest.project().rigAssets.length)).toBe(0);
@@ -183,6 +191,7 @@ test('Frames import creates a shared base image immediately without cutouts',asy
   expect(first.x).not.toBe(second.x);expect(second.x).toBe(0);
   await page.locator('#moreToggle').click();await page.locator('#save').click();await page.reload();await page.locator('#frameMode').click();
   await expect.poll(()=>page.evaluate(()=>window.SpriteStudioTest.project().animationBase?.filename)).toBe('base.png');
+  expect(await page.evaluate(()=>window.SpriteStudioTest.sampleVisibleColour({x:40,y:40},3,null))).not.toBeNull();
 });
 
 test('desktop complete-frame Merge is isolated, editable, persistent, and export-safe',async({page})=>{
