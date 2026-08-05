@@ -168,7 +168,7 @@ test('Frames empty-state import creates a shared base image immediately without 
   await page.goto('/studio/');
   await page.locator('#frameMode').click();
   await expect(page.locator('#emptyTitle')).toHaveText('Start with a frame image');
-  await expect(page.locator('#emptyMessage')).toContainText('shared base for every frame');
+  await expect(page.locator('#emptyMessage')).toContainText('shared base for all frames');
   await expect(page.locator('#emptyImportLabel')).toHaveAttribute('for','frameInput');
   const chooserPromise=page.waitForEvent('filechooser');await page.locator('#emptyImportLabel').click();const chooser=await chooserPromise;await chooser.setFiles({name:'base.png',mimeType:'image/png',buffer:masterPng()});
   await expect.poll(()=>page.evaluate(()=>!!window.SpriteStudioTest.project().animationBase)).toBe(true);
