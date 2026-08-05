@@ -10,16 +10,16 @@
   <link rel="stylesheet" href="mobile-fixes.css">
 </head>
 <body data-mode="asset">
-  <header>
+  <header id="appHeader">
     <a class="brand" href="../"><b>SPRITE<span>LAB</span></b><small>STUDIO</small></a>
-    <nav aria-label="Workspace"><button id="assetMode" class="active"><span>Artwork</span></button><button id="frameMode"><span>Animate</span></button><button id="moreToggle" class="project-trigger" aria-expanded="false" aria-controls="morePanel"><span>Project</span></button></nav>
+    <nav aria-label="Workspace"><button id="assetMode" class="active"><span>Artwork</span></button><button id="frameMode"><span>Frames</span></button><button id="moreToggle" class="project-trigger" aria-expanded="false" aria-controls="morePanel"><span>Project</span></button></nav>
     <div id="saveState">Local-first</div>
   </header>
 
-  <input id="masterInput" class="visually-hidden" type="file" accept="image/png">
+  <input id="masterInput" class="visually-hidden" type="file" accept="image/png"><input id="frameInput" class="visually-hidden" type="file" accept="image/png"><input id="mergeInput" class="visually-hidden" type="file" accept="image/png">
   <div class="toolbar" aria-label="Project actions">
     <label id="importLabel" class="file primary" for="masterInput">Open image</label>
-    <button id="fit">Fit</button><button id="undo">Undo</button><button id="redo">Redo</button>
+    <label id="addFrameImage" class="file primary" for="frameInput">Add frame</label><button id="fit">Fit</button><button id="undo">Undo</button><button id="redo">Redo</button>
     <aside class="sheet more-menu-panel" id="morePanel" aria-label="More project actions" aria-hidden="true">
       <div class="sheet-head"><strong>Project</strong><button data-sheet-close aria-label="Close project actions">Close</button></div>
       <div class="sheet-body">
@@ -32,18 +32,18 @@
 
   <main>
     <aside class="tools" aria-label="Canvas tools">
-      <button data-tool="select">▱<span>Select</span></button><button data-tool="polygon">⬠<span>Polygon</span></button>
-      <button data-tool="move">✥<span>Move</span></button><button data-tool="rotate">↻<span>Rotate</span></button>
-      <button data-tool="erase">◯<span>Erase</span></button>
-      <button data-tool="fill">●<span>Fill</span></button>
-      <button id="inspectorToggle" aria-expanded="false" aria-controls="inspectorPanel">▦<span>Parts</span></button>
+      <button data-tool="select"><span class="tool-icon" aria-hidden="true">▱</span><span class="tool-label">Select</span></button><button data-tool="polygon"><span class="tool-icon" aria-hidden="true">⬠</span><span class="tool-label">Polygon</span></button>
+      <button data-tool="move"><span class="tool-icon" aria-hidden="true">✥</span><span class="tool-label">Move</span></button><button data-tool="scale"><span class="tool-icon" aria-hidden="true">⤢</span><span class="tool-label">Scale</span></button><button data-tool="rotate"><span class="tool-icon" aria-hidden="true">↻</span><span class="tool-label">Rotate</span></button>
+      <button data-tool="erase"><span class="tool-icon" aria-hidden="true">◯</span><span class="tool-label">Erase</span></button>
+      <button data-tool="fill"><span class="tool-icon" aria-hidden="true">●</span><span class="tool-label">Fill</span></button><button id="mergeImages"><span class="tool-icon" aria-hidden="true">⇉</span><span class="tool-label">Merge</span></button>
+      <button id="inspectorToggle" aria-label="Layers" aria-expanded="false" aria-controls="inspectorPanel"><span class="tool-icon" aria-hidden="true">▦</span><span class="tool-label">Layers</span></button>
     </aside>
     <section class="workspace">
       <div class="canvasbar"><strong id="workspaceGoal">Prepare artwork</strong><span id="dimensions">No image</span><label class="background-mode">Background <select id="canvasBackground"><option value="checker">Checker</option><option value="black">Black</option><option value="white">White</option></select></label><span id="toolStatus">Navigate</span><span id="zoom">100%</span></div>
       <div id="viewport">
-        <canvas id="canvas"></canvas>
+        <canvas id="canvas"></canvas><div id="guides" aria-hidden="true"><i class="guide-v"></i><i class="guide-h"></i><i class="guide-cross"></i></div>
         <div id="empty">
-          <b>Start with your artwork</b><span>Open the character image you want to turn into animation parts.</span>
+          <b id="emptyTitle">Start with your artwork</b><span id="emptyMessage">Open the character image you want to turn into animation parts.</span>
           <label class="file primary" for="masterInput">Open image</label>
         </div>
         <button id="onboardingHint" hidden aria-label="Dismiss hint">Select a body part, choose its role, then extract it. <span>×</span></button>
@@ -54,24 +54,25 @@
       </div>
     </section>
     <div id="sheetBackdrop" hidden></div>
-    <aside class="sheet inspector" id="inspectorPanel" aria-label="Assets and properties" aria-hidden="true">
-      <div class="sheet-head"><strong>Parts</strong><div class="inspector-level"><button id="basicInspector" class="active">Basic</button><button id="advancedInspector">Advanced</button></div><button id="inspectorClose" aria-label="Close parts">Close</button></div>
+    <aside class="sheet inspector" id="inspectorPanel" aria-label="Layers and properties" aria-hidden="true">
+      <div class="sheet-head"><strong>Layers</strong><div class="inspector-level"><button id="basicInspector" class="active">Basic</button><button id="advancedInspector">Advanced</button></div><button id="inspectorClose" aria-label="Close layers">Close</button></div>
       <section><h2>Layers</h2><div id="assets"></div></section>
-      <section id="properties"><h2>Properties</h2><p class="muted">Select an extracted asset.</p></section>
+      <section id="properties"><h2>Properties</h2><p class="muted">Select a layer.</p></section>
       <section class="mask-tools advanced-only"><h2>Mask tools</h2><div class="row"><button data-sheet-tool="erase">Erase</button><button data-sheet-tool="restore">Restore</button></div></section>
       <section class="artwork-view advanced-only"><h2>Artwork view</h2><div class="row"><button id="toggleMaster">Image: on</button><button id="rawMaster">Edits: on</button></div><button id="removeBackground">Remove edge background</button><label>Image opacity <input id="masterOpacity" type="range" min="0" max="100" value="100"></label></section>
       <section class="advanced-only"><h2>Seam QA</h2><label>Leg test <input id="legAngle" type="range" min="-20" max="20" value="0"><output id="legAngleValue">0°</output></label><button id="recompose">Preview recomposition</button><ul id="warnings"></ul></section>
     </aside>
   </main>
 
-  <footer>
+  <footer id="timelineFooter">
     <div class="timeline-actions"><button id="timelineSettings" aria-expanded="false" aria-controls="settingsPanel">Frame actions</button></div>
     <div class="timeline-scroll"><div class="transport"><button id="previous" aria-label="Previous frame">◀</button><button id="play" class="primary" aria-label="Play">▶</button><button id="next" aria-label="Next frame">▶</button><button id="newFrame">+ Add frame</button></div><div id="timeline"></div></div>
   </footer>
   <aside class="sheet settings-panel" id="settingsPanel" aria-label="Frame settings" aria-hidden="true">
     <div class="sheet-head"><strong>Frame settings</strong><button data-sheet-close aria-label="Close frame settings">Close</button></div>
-    <div class="sheet-body"><button id="demoWalk" data-demo-walk>Demo walk</button><div class="row"><button id="duplicate">Duplicate frame</button><button id="deleteFrame" class="danger">Delete frame</button></div><hr><label>Speed (FPS) <input id="fps" type="number" min="1" max="30" value="10"></label><label><input id="onionPrev" type="checkbox"> Show previous frame</label><label><input id="onionNext" type="checkbox"> Show next frame</label><label>Guide opacity <input id="onionOpacity" type="range" min="5" max="70" value="25"></label><hr><label><input id="comparePrevious" type="checkbox"> Compare previous</label><p id="compareUnavailable" class="muted">Unavailable on frame 1</p><div id="compareControls" hidden><label>Overlay opacity <input id="compareOpacity" type="range" min="5" max="80" value="35"></label><label><input id="showDifferences" type="checkbox"> Show differences</label><label>Anchor <select id="compareAnchor"><option value="">None</option></select></label><div id="anchorDelta" class="delta-values" aria-live="polite"></div><p id="driftWarning" class="drift-warning" hidden>Possible accidental drift — or expected intentional motion.</p><div class="row"><button id="copyAnchorPose">Copy anchor pose from previous</button><button id="alignAnchor">Align current frame to previous anchor</button></div></div><hr><button id="copyRegion">Copy selected area</button><button id="pastePatch">Paste into this frame</button></div>
+    <div class="sheet-body"><label><input id="showGuides" type="checkbox" checked> Show alignment guides</label><button id="demoWalk" data-demo-walk>Demo walk</button><div class="row"><button id="duplicate">Duplicate frame</button><button id="deleteFrame" class="danger">Delete frame</button></div><hr><label>Speed (FPS) <input id="fps" type="number" min="1" max="30" value="10"></label><label><input id="onionPrev" type="checkbox"> Show previous frame</label><label><input id="onionNext" type="checkbox"> Show next frame</label><label>Guide opacity <input id="onionOpacity" type="range" min="5" max="70" value="25"></label><hr><label><input id="comparePrevious" type="checkbox"> Compare previous</label><p id="compareUnavailable" class="muted">Unavailable on frame 1</p><div id="compareControls" hidden><label>Overlay opacity <input id="compareOpacity" type="range" min="5" max="80" value="35"></label><label><input id="showDifferences" type="checkbox"> Show differences</label><label>Anchor <select id="compareAnchor"><option value="">None</option></select></label><div id="anchorDelta" class="delta-values" aria-live="polite"></div><p id="driftWarning" class="drift-warning" hidden>Possible accidental drift — or expected intentional motion.</p><div class="row"><button id="copyAnchorPose">Copy anchor pose from previous</button><button id="alignAnchor">Align current frame to previous anchor</button></div></div><hr><button id="copyRegion">Copy selected area</button><button id="pastePatch">Paste into this frame</button></div>
   </aside>
+  <dialog id="mergeDialog" aria-label="Merge images"><section class="merge-shell" aria-labelledby="mergeTitle"><div class="merge-head"><strong id="mergeTitle">Merge images</strong><span id="mergeStatus" aria-live="polite">Editing Image A</span></div><div class="merge-controls"><fieldset><legend>View</legend><button data-merge-view="combined" class="active">Combined</button><button data-merge-view="a">Focus A</button><button data-merge-view="b">Focus B</button></fieldset><fieldset><legend>Editing</legend><button data-merge-edit="a" class="active">Image A</button><button data-merge-edit="b">Image B</button></fieldset><label class="file" for="mergeInput">Choose Image B</label><button id="mergeMove">Move</button><button id="mergeScale">Scale</button><button id="mergeErase">Erase</button><button id="mergeRestore">Restore</button><label>Brush <input id="mergeBrush" type="range" min="2" max="80" value="20"></label><button id="mergeUndo">Undo</button><button id="mergeRedo">Redo</button><button id="mergeReset">Reset transform</button><button id="mergeSwap">Swap order</button></div><div id="mergeViewport"><canvas id="mergeCanvas"></canvas><div class="merge-guides" aria-hidden="true"><i class="guide-v"></i><i class="guide-h"></i><i class="guide-cross"></i></div></div><div class="merge-footer"><button id="cancelMerge">Cancel</button><button id="acceptMerge" class="primary">Merge</button></div></section></dialog>
   <dialog id="demoDialog" aria-label="Demo walk preview"><div class="demo-shell"><div class="demo-head"><strong>Demo walk</strong></div><div class="demo-preview"><canvas id="demoCanvas"></canvas></div><div class="demo-controls"><button id="demoPlay">Pause</button><label>Direction <select id="demoDirection"><option value="right">Right</option><option value="left">Left</option><option value="ping-pong">Ping-pong</option></select></label><label>Speed <select id="demoSpeed"><option value="slow">Slow</option><option value="normal" selected>Normal</option><option value="fast">Fast</option><option value="faster">Faster</option></select></label></div><div class="demo-footer"><button id="closeDemo">Close</button></div></div></dialog>
   <div id="toast" role="status"></div>
   <script src="../vendor/jszip.min.js"></script><script type="module" src="app.js"></script>
