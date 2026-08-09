@@ -103,7 +103,7 @@ jobs:
                   repo: context.repo.repo,
                   username: login,
                 });
-                return ['admin', 'maintain', 'write'].includes(data.user.permission);
+                return ['admin', 'maintain', 'write'].includes(data.permission);
               } catch (error) {
                 core.warning(`Could not establish permission for ${login}: ${error.message}`);
                 return false;
