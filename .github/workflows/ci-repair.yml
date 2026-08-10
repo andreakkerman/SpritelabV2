@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  MAX_REPAIR_ATTEMPTS: "3"
+  MAX_REPAIR_ATTEMPTS: "1"
 
 jobs:
   clear-success-state:
@@ -236,7 +236,7 @@ jobs:
           $(cat diagnostics/artifacts.json)
           EOF
 
-      - name: Comment when three attempts are exhausted
+      - name: Comment when the repair attempt is exhausted
         if: steps.qualify.outputs.exhausted == 'true'
         uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         env:
@@ -248,7 +248,7 @@ jobs:
             const jobs = fs.readFileSync('diagnostics/failed-jobs.json', 'utf8').slice(0, 4000);
             const log = fs.readFileSync('diagnostics/failed.log', 'utf8').slice(-6000);
             const marker = '<!-- codex-ci-repair-exhausted -->';
-            const body = `${marker}\n## Autonomous CI repair exhausted\n\nAll 3 repair attempts failed. Human review is required.\n\nLatest failed run: ${process.env.RUN_URL}\n\nFailed jobs/tests:\n\`\`\`json\n${jobs}\n\`\`\`\n\nFinal failure excerpt:\n\`\`\`text\n${log}\n\`\`\``;
+            const body = `${marker}\n## Autonomous CI repair exhausted\n\nThe single automatic repair attempt failed. Human review is required.\n\nLatest failed run: ${process.env.RUN_URL}\n\nFailed jobs/tests:\n\`\`\`json\n${jobs}\n\`\`\`\n\nFinal failure excerpt:\n\`\`\`text\n${log}\n\`\`\``;
             const {data: comments} = await github.rest.issues.listComments({
               owner: context.repo.owner, repo: context.repo.repo,
               issue_number: Number(process.env.PR_NUMBER), per_page: 100,
@@ -293,6 +293,8 @@ jobs:
         uses: openai/codex-action@b11346a6fa031e2e164ab4b7c7ea201afffd7d59 # v1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          model: gpt-5.4-mini
+          effort: low
           permission-profile: ":workspace"
           safety-strategy: drop-sudo
           # The qualification job already proved this exact human/App actor has
@@ -374,7 +376,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: Number(process.env.PR_NUMBER),
-              body: `${marker}\nAutonomous CI repair attempt ${process.env.ATTEMPT}/3 stopped without a safe patch (for example, Codex failed, produced no change, or touched a protected file). Human review is required: ${process.env.REPAIR_RUN_URL}`,
+              body: `${marker}\nAutonomous CI repair attempt ${process.env.ATTEMPT}/1 stopped without a safe patch (for example, Codex failed, produced no change, or touched a protected file). Human review is required: ${process.env.REPAIR_RUN_URL}`,
             });
 
   push:

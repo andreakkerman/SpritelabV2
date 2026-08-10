@@ -2,6 +2,8 @@
 
 The `Autonomous Codex CI repair` workflow watches completed runs of `Validate, QA, and deploy Pages`. When a pull-request run fails, it retrieves the failed jobs, log excerpt, and artifact inventory, asks the official `openai/codex-action` for a minimal repair, validates the patch in a credential-free job, and pushes it to the same PR branch. That push starts the normal PR validation again.
 
+To keep paid API usage bounded, the workflow makes at most **one automatic AI repair attempt per failing PR state**. That attempt uses `gpt-5.4-mini` with `low` reasoning effort. If the repaired commit still fails authoritative CI, or Codex cannot produce a safe patch, the workflow stops and escalates to human review instead of paying for another automatic attempt.
+
 ## One-time setup
 
 1. Add the Actions secret `OPENAI_API_KEY` with an OpenAI API key allowed to use Codex.
@@ -18,10 +20,10 @@ If any credential is missing, the workflow fails closed before counting or attem
 
 Repairs run only for an open, same-repository PR whose branch is `codex/**`, whose PR author and failed-run actor both have write access, and whose current head SHA is exactly the SHA that failed. Forks, stale runs, non-PR runs, non-Codex branches, and ambiguous PR associations are rejected.
 
-Visible labels record durable PR-scoped attempts: `codex-repair-1`, `codex-repair-2`, and `codex-repair-3`. Authoritative success clears the attempt label. A failure after the third repair adds `codex-repair-exhausted` and one comment with the last failed run, failed jobs, and final log excerpt. That label means human intervention is required. A missing or protected Codex patch also stops and posts a human-review comment rather than bypassing the guard. Per-PR concurrency and a second head-SHA check prevent concurrent or stale pushes.
+The visible `codex-repair-1` label records that the single paid repair attempt has been used. Authoritative success clears the attempt label. If the repaired commit still fails, the workflow adds `codex-repair-exhausted` and one comment with the last failed run, failed jobs, and final log excerpt. That label means human intervention is required. A missing or protected Codex patch also stops and posts a human-review comment rather than bypassing the guard. Per-PR concurrency and a second head-SHA check prevent concurrent or stale pushes.
 
 Codex never receives a GitHub write token. The API key is handled by the official action's proxy, and PR-controlled validation runs later in a separate job with no secrets. `.github/**`, `tests/**`, `package.json`, and `package-lock.json` are protected from autonomous changes. Logs and repository contents are explicitly treated as untrusted data.
 
 ## Disable or reset
 
-Disable the `Autonomous Codex CI repair` workflow in the repository Actions settings (or remove its secrets) to stop autonomous repair. After a human resolves an exhausted sequence, remove all `codex-repair-*` labels to allow a future failure to begin a new three-attempt sequence.
+Disable the `Autonomous Codex CI repair` workflow in the repository Actions settings (or remove its secrets) to stop autonomous repair. After a human resolves an exhausted sequence, remove all `codex-repair-*` labels to allow a future failure to begin a new single-attempt sequence.
