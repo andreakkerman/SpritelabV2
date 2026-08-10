@@ -99,6 +99,3 @@ export function safeImport(value) {
   if (errors.length) throw new Error(errors.join("; "));
   return structuredClone(value);
 }
-
-// Intentional syntax failure for autonomous CI repair smoke test.
-export const CI_REPAIR_SMOKE_TEST = ;
