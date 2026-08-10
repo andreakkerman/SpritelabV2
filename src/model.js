@@ -1,3 +1,6 @@
+// Intentional syntax failure for autonomous CI repair cost smoke test.
+export const CI_REPAIR_SMOKE_TEST = ;
+
 export const CANVAS = { width: 360, height: 440, transparent: true };
 export const GROUND = 420;
 export const WHOLE_IDS = ["upper_body", "left_leg", "right_leg", "pelvis_cover"];
